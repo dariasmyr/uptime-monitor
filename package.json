@@ -1,0 +1,22 @@
+{
+  "name": "app.js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/daria_smyr/uptime-monitor.git"
+  },
+  "author": "Daria, Slava",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/daria_smyr/uptime-monitor/issues"
+  },
+  "homepage": "https://gitlab.com/daria_smyr/uptime-monitor#readme",
+  "dependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
