@@ -17,7 +17,7 @@
     "url": "https://gitlab.com/daria_smyr/uptime-monitor/issues"
   },
   "homepage": "https://gitlab.com/daria_smyr/uptime-monitor#readme",
-  "dependencies": {
+  "devDependencies": {
     "nodemon": "^2.0.20"
   }
 }
