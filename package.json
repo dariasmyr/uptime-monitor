@@ -2,10 +2,10 @@
   "name": "app.js",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "npx nodemon npm start"
+    "start": "node src/app.js",
+    "dev": "npx nodemon src/app.js"
   },
   "repository": {
     "type": "git",
