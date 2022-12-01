@@ -1,16 +1,16 @@
 {
   "sites": [
     {
-      "name": "Site1",
-      "time": "3000"
+      "url": "https://site1.com",
+      "intervalMs": 3000
     },
     {
-      "name": "Site2",
-      "time": "3000"
+      "url": "https://site2.com",
+      "intervalMs": 3000
     },
     {
-      "name": "Site3",
-      "time": "1000"
+      "url": "https://site3.com",
+      "intervalMs": 1000
     }
   ]
 }
