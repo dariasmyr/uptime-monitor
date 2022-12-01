@@ -1,0 +1,16 @@
+{
+  "sites": [
+    {
+      "name": "Site1",
+      "time": "3000"
+    },
+    {
+      "name": "Site2",
+      "time": "3000"
+    },
+    {
+      "name": "Site3",
+      "time": "1000"
+    }
+  ]
+}
