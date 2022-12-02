@@ -1,42 +1,44 @@
 const config = require('./sample-config.json');
 
+function delay(ms) {
+    return new Promise(function (resolve) {
+        setTimeout(function () {
+            resolve();
+        }, ms);
+    });
+}
+// Mock function to ping a site
+// Todo - change this function as if you really want to ping a site
+
 async function pingSite(url) {
     // wait random time between 0 and 1 second
-    const randomDelay = Math.random() * 1000;
-    await new Promise(resolve => setTimeout(resolve, randomDelay));
+    const randomDelay = Math.random() * 5000;
+    await delay(randomDelay);
     console.log(`Pinged ${url}, time taken: ${randomDelay}ms`);
-}
-
-async function pingSites() {
-    const sites = config.sites;
-    for (const site of sites) {
-        console.log(`Pinging ${site.url}`);
-        pingSite(site.url);
+    const randomValue = Math.random();
+    if (randomValue >= 0.5) {
+        throw new Error('Ping failed');
+    } else {
+        return true;
     }
 }
 
-// pingSites();
+function main() {
+    const sites = config.sites;
+    console.log('sites', sites);
+    sites.forEach(function (site) {
+        console.log(`Start pinging ${site.url} with interval ${site.intervalMs}`);
 
-
-
-function fetchUrl () {
-    let urls = [
-        'https://api.github.com/users/iliakan',
-        'https://api.github.com/users/remy',
-        'https://no-such-url'
-    ];
-
-    Promise.allSettled(urls.map(url => fetch(url)))
-        .then(results => { // (*)
-            results.forEach((result, num) => {
-                if (result.status === "fulfilled") {
-                    console.log(`${urls[num]}: ${result.value.status}`);
-                }
-                if (result.status === "rejected") {
-                    console.log(`${urls[num]}: ${result.reason}`);
-                }
-            });
-        });
+        setInterval(async function () {
+            try {
+                const pingResult = await pingSite(site.url);
+                console.log('pingResult', pingResult);
+            } catch (err) {
+                console.log('err', err);
+            }
+        }, site.intervalMs);
+    });
+    console.log('Monitoring sites...');
 }
 
-fetchUrl();
+main()

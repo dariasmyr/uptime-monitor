@@ -2,15 +2,15 @@
   "sites": [
     {
       "url": "https://site1.com",
-      "intervalMs": 3000
+      "intervalMs": 5000
     },
     {
       "url": "https://site2.com",
-      "intervalMs": 3000
+      "intervalMs": 6000
     },
     {
       "url": "https://site3.com",
-      "intervalMs": 1000
+      "intervalMs": 3000
     }
   ]
 }
