@@ -12,15 +12,15 @@ function delay(ms) {
 
 async function pingSite(url) {
     // wait random time between 0 and 1 second
-    const randomDelay = Math.random() * 5000;
-    await delay(randomDelay);
-    console.log(`Pinged ${url}, time taken: ${randomDelay}ms`);
-    const randomValue = Math.random();
-    if (randomValue >= 0.5) {
-        throw new Error('Ping failed');
-    } else {
+    const setDelay = 5000;
+    await delay(setDelay);
+    console.log(`Pinged ${url}, time taken: ${setDelay}ms`);
+    // const randomValue = Math.random();
+    // if (randomValue >= 0.5) {
+    //     throw new Error('Ping failed');
+    // } else {
         return true;
-    }
+    // }
 }
 
 function main() {
