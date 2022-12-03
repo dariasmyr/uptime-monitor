@@ -2,11 +2,11 @@
   "sites": [
     {
       "url": "https://gyde.one/",
-      "intervalMs": 1000
+      "intervalMs": 5000
     },
     {
       "url": "http://stage.gyde.one/",
-      "intervalMs": 1000
+      "intervalMs": 5000
     }
   ]
 }

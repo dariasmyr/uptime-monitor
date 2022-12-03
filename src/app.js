@@ -1,44 +1,39 @@
 const config = require('./sample-config.json');
+const axios = require('axios');
 
-function delay(ms) {
-    return new Promise(function (resolve) {
-        setTimeout(function () {
-            resolve();
-        }, ms);
-    });
+function log(msg) {
+    console.log(new Date().toISOString(), msg);
 }
+
 // Mock function to ping a site
 // Todo - change this function as if you really want to ping a site
 
 async function pingSite(url) {
-    // wait random time between 0 and 1 second
-    const setDelay = 5000;
-    await delay(setDelay);
-    console.log(`Pinged ${url}, time taken: ${setDelay}ms`);
-    // const randomValue = Math.random();
-    // if (randomValue >= 0.5) {
-    //     throw new Error('Ping failed');
-    // } else {
-        return true;
-    // }
+    try {
+        // Download url and check status is 200
+        const result = await axios.get(url);
+        return result.status === 200;
+    } catch (err) {
+        log('err', err.message);
+        return false;
+    }
 }
 
 function main() {
     const sites = config.sites;
-    console.log('sites', sites);
+    log('sites', sites);
     sites.forEach(function (site) {
-        console.log(`Start pinging ${site.url} with interval ${site.intervalMs}`);
+        log(`Start pinging ${site.url} with interval ${site.intervalMs}`);
 
         setInterval(async function () {
-            try {
+                const pingTimeStart = new Date().getTime();
                 const pingResult = await pingSite(site.url);
-                console.log('pingResult', pingResult);
-            } catch (err) {
-                console.log('err', err);
-            }
+                const pingTimeEnd = new Date().getTime();
+                const pingTime = pingTimeEnd - pingTimeStart;
+                log(`Ping ${site.url} result: ${pingResult} in ${pingTime} ms`);
         }, site.intervalMs);
     });
-    console.log('Monitoring sites...');
+    log('Monitoring sites...');
 }
 
 main()
