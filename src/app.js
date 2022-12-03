@@ -1,4 +1,4 @@
-const config = require('./sample-config.json');
+const config = require('./config');
 const axios = require('axios');
 const chalk = require('chalk');
 
@@ -24,18 +24,15 @@ function main() {
         log(`Start pinging ${site.url} with interval ${site.intervalMs}`);
         setInterval(async function () {
             const pingTimeStart = new Date().getTime();
-            let pingResult = undefined;
-            let pingTime = undefined;
-            let pingTimeEnd = undefined;
             try {
-                pingResult = await pingSite(site.url);
-                pingTimeEnd = new Date().getTime();
-                pingTime = pingTimeEnd - pingTimeStart;
+                const pingResult = await pingSite(site.url);
+                const pingTimeEnd = new Date().getTime();
+                const pingTime = pingTimeEnd - pingTimeStart;
                 log(`Ping ${site.url} result: ${pingResult} in ${pingTime} ms`);
             } catch (err) {
-                pingResult = false;
-                pingTimeEnd = new Date().getTime();
-                pingTime = pingTimeEnd - pingTimeStart;
+                const pingResult = false;
+                const pingTimeEnd = new Date().getTime();
+                const pingTime = pingTimeEnd - pingTimeStart;
                 log(`Ping ${site.url} result: ${pingResult} in ${pingTime} ms. Error: ${err.message}`);
             }
         }, site.intervalMs);
