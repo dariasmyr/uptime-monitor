@@ -21,6 +21,7 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
-    "axios": "^1.2.0"
+    "axios": "^1.2.0",
+    "chalk": "4.1.2"
   }
 }
