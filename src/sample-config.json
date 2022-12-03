@@ -2,11 +2,15 @@
   "sites": [
     {
       "url": "https://gyde.one/",
-      "intervalMs": 5000
+      "intervalMs": 6000
     },
     {
       "url": "http://stage.gyde.one/",
-      "intervalMs": 5000
+      "intervalMs": 6100
+    },
+    {
+      "url": "https://identix.space/",
+      "intervalMs": 6200
     }
   ]
 }
