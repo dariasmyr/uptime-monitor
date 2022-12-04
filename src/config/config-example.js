@@ -1,6 +1,6 @@
 const config = {
-    apiKey: "5552830829:AAG5TeVR-hGTPWN395wMiA_57uiGDCWr_xs",
-    chatId: "394699121",
+    apiKey: "000000:0000000",
+    chatId: "000",
     sites: [
         {
             url: "https://gyde.one/",
