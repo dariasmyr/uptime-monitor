@@ -190,4 +190,4 @@ dist
 .pnp.*
 
 .idea
-./config.js
+.src/config.js
