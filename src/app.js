@@ -25,4 +25,4 @@ async function main() {
     logger.log('Monitoring sites...');
 }
 
-main()
+main().catch(console.error);
