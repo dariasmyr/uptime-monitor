@@ -191,4 +191,5 @@ dist
 
 .idea
 
-/src/config/config.js
+/src/config
+!/src/config/config-example.js
