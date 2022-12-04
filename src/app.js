@@ -2,7 +2,7 @@ const config = require('./config/config.js');
 const axios = require('axios');
 const chalk = require('chalk');
 
-async function sendMessageToTelegram (message) {
+async function sendMessageToTelegram(message) {
     const apiKey = config.apiKey;
     const chatId = config.chatId;
     const url = `https://api.telegram.org/bot${apiKey}/sendMessage?chat_id=${chatId}&text=${message}`;
@@ -17,9 +17,9 @@ async function pingSite(url) {
     // Download url and check status is 200
     const result = await axios.get(url);
     try {
-    return (result.status >= 200) && (result.status <= 299);
+        return (result.status >= 200) && (result.status <= 299);
     } catch (err) {
-    return false;
+        return false;
     }
 }
 
