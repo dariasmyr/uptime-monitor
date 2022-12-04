@@ -13,7 +13,11 @@ const config = {
         {
             url: "https://identix.space/",
             intervalMs: 6200
-        }
+        },
+        {
+            url: "https://www.imdb.com/title/tt1160419/",
+            intervalMs: 6300
+        },
     ]
 }
 

@@ -39,7 +39,7 @@ function main() {
                 const pingResult = false;
                 const pingTimeEnd = new Date().getTime();
                 const pingTime = pingTimeEnd - pingTimeStart;
-                let message = `Ping ${site.url} result: ${pingResult} in ${pingTime} ms. Error: ${err.message}`;
+                let message = `Ping ${site.url} result: ${pingResult} in ${pingTime} ms. Error: ${err.message}.`;
                 log(message);
                 await sendMessageToTelegram(message);
             }
