@@ -2,7 +2,6 @@ const config = require('./config/config.js');
 const axios = require('axios');
 const chalk = require('chalk');
 
-
 async function sendMessageToTelegram (message) {
     const apiKey = config.apiKey;
     const chatId = config.chatId;
@@ -25,7 +24,6 @@ async function pingSite(url) {
 }
 
 function main() {
-    console.log('Starting...');
     const sites = config.sites;
     log('sites', JSON.stringify(sites, null, 2));
     for (const site of sites) {
