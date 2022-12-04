@@ -1,11 +1,7 @@
 const config = require('./config/config.js');
 const axios = require('axios');
-const chalk = require('chalk');
 const {TelegramRepository} = require('./telegram.repository');
-
-function log(...msg) {
-    console.log(chalk.bgCyanBright(new Date().toISOString()), '|', chalk.magenta(...msg));
-}
+const {LoggerService} = require("./logger.service");
 
 async function pingSite(url) {
     // Download url and check status is 200
@@ -20,29 +16,32 @@ async function pingSite(url) {
 async function main() {
     const telegramRepository = new TelegramRepository(config.apiKey, config.chatId);
     await telegramRepository.sendMessage('Bot started');
+    
+    const logger = new LoggerService('main', true);
+    // logger.enabled = false;
 
     const sites = config.sites;
-    log('sites', JSON.stringify(sites, null, 2));
+    logger.log('sites', JSON.stringify(sites, null, 2));
     for (const site of sites) {
-        log(`Start pinging ${site.url} with interval ${site.intervalMs}`);
+        logger.log(`Start pinging ${site.url} with interval ${site.intervalMs}`);
         setInterval(async function () {
             const pingTimeStart = new Date().getTime();
             try {
                 const pingResult = await pingSite(site.url);
                 const pingTimeEnd = new Date().getTime();
                 const pingTime = pingTimeEnd - pingTimeStart;
-                log(`Ping ${site.url} result: ${pingResult} in ${pingTime} ms`);
+                logger.log(`Ping ${site.url} result: ${pingResult} in ${pingTime} ms`);
             } catch (err) {
                 const pingResult = false;
                 const pingTimeEnd = new Date().getTime();
                 const pingTime = pingTimeEnd - pingTimeStart;
                 let message = `Ping ${site.url} result: ${pingResult} in ${pingTime} ms. Error: ${err.message}.`;
-                log(message);
+                logger.log(message);
                 await telegramRepository.sendMessage(message);
             }
         }, site.intervalMs);
     }
-    log('Monitoring sites...');
+    logger.log('Monitoring sites...');
 }
 
 main()
