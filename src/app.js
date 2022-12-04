@@ -1,13 +1,7 @@
 const config = require('./config/config.js');
 const axios = require('axios');
 const chalk = require('chalk');
-
-async function sendMessageToTelegram(message) {
-    const apiKey = config.apiKey;
-    const chatId = config.chatId;
-    const url = `https://api.telegram.org/bot${apiKey}/sendMessage?chat_id=${chatId}&text=${message}`;
-    return await axios.get(url);
-}
+const {TelegramRepository} = require('./telegram.repository');
 
 function log(...msg) {
     console.log(chalk.bgCyanBright(new Date().toISOString()), '|', chalk.magenta(...msg));
@@ -23,7 +17,10 @@ async function pingSite(url) {
     }
 }
 
-function main() {
+async function main() {
+    const telegramRepository = new TelegramRepository(config.apiKey, config.chatId);
+    await telegramRepository.sendMessage('Bot started');
+
     const sites = config.sites;
     log('sites', JSON.stringify(sites, null, 2));
     for (const site of sites) {
@@ -41,7 +38,7 @@ function main() {
                 const pingTime = pingTimeEnd - pingTimeStart;
                 let message = `Ping ${site.url} result: ${pingResult} in ${pingTime} ms. Error: ${err.message}.`;
                 log(message);
-                await sendMessageToTelegram(message);
+                await telegramRepository.sendMessage(message);
             }
         }, site.intervalMs);
     }
