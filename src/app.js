@@ -1,4 +1,4 @@
-const config = require('./config');
+const config = require('./config/config.js');
 const axios = require('axios');
 const chalk = require('chalk');
 
