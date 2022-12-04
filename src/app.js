@@ -3,16 +3,12 @@ const axios = require('axios');
 const chalk = require('chalk');
 
 
-async function sendMessageToTelegram () {
+async function sendMessageToTelegram (message) {
     const apiKey = config.apiKey;
     const chatId = config.chatId;
-    let message = main.catch();
     const url = `https://api.telegram.org/bot${apiKey}/sendMessage?chat_id=${chatId}&text=${message}`;
     return await axios.get(url);
 }
-
-sendMessageToTelegram();
-
 
 function log(...msg) {
     console.log(chalk.bgCyanBright(new Date().toISOString()), '|', chalk.magenta(...msg));
@@ -45,7 +41,9 @@ function main() {
                 const pingResult = false;
                 const pingTimeEnd = new Date().getTime();
                 const pingTime = pingTimeEnd - pingTimeStart;
-                log(`Ping ${site.url} result: ${pingResult} in ${pingTime} ms. Error: ${err.message}`);
+                let message = `Ping ${site.url} result: ${pingResult} in ${pingTime} ms. Error: ${err.message}`;
+                log(message);
+                await sendMessageToTelegram(message);
             }
         }, site.intervalMs);
     }
