@@ -1,5 +1,6 @@
 const config = {
-    privateKey: "0x000000000000",
+    apiKey: "5552830829:AAG5TeVR-hGTPWN395wMiA_57uiGDCWr_xs",
+    chatId: "394699121",
     sites: [
         {
             url: "https://gyde.one/",
@@ -17,3 +18,5 @@ const config = {
 }
 
 module.exports = config
+
+
