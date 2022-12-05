@@ -16,13 +16,12 @@ async function main() {
         logger.log(`Start pinging ${site.url} with interval ${site.intervalMs}`);
         setInterval(async function () {
             const pingTimeStart = new Date().getTime();
-            const pingResult = (await AvailableCheckerService.httpCheck(site.url)).result;
-            const pingMessage = (await AvailableCheckerService.httpCheck(site.url)).message;
+            const {result, message} = await AvailableCheckerService.httpCheck(site.url);
             const pingTimeEnd = new Date().getTime();
             const pingTime = pingTimeEnd - pingTimeStart;
-            logger.log(`Ping ${site.url} result: ${pingResult} in ${pingTime} ms`);
-            if (!pingResult) {
-                await telegramRepository.sendMessage(`Site ${site.url} is not available. ${pingMessage}`);
+            logger.log(`Ping ${site.url} result: ${result} in ${pingTime} ms`);
+            if (!result) {
+                await telegramRepository.sendMessage(`Site ${site.url} is not available. ${message}`);
             }
         }, site.intervalMs);
     }
