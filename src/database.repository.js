@@ -4,7 +4,7 @@ const {LoggerService} = require("./logger.service");
 const logger = new LoggerService('DatabaseRepository');
 
 class DatabaseRepository {
-    constructor(_db) {
+    constructor(_db, _params) {
         this.db = _db;
         this.logger = new LoggerService('DatabaseRepository');
     }
@@ -18,16 +18,16 @@ class DatabaseRepository {
         }
     }
 
-    async addErrorToDatabase() {
-        let params = [this.logger.showTimestamp, main.message, main.status, httpRes.status, url];
-        this.logger.log(params);
-        let placeholders = params.map(() => '(?)').join(',');
-        let sql = ('INSERT INTO errors(date_created, description, error_status, site) VALUES ' + placeholders);
-        this.logger.log(sql);
 
+    async addErrorToDatabase(params) {
+        this.logger.log('Params: ' + params);
+        let sql = ('INSERT INTO errors(date_created, description, error_status, site) VALUES (?), (?), (?), (?)');
+        this.logger.log('SQLquery: ' + sql);
+
+        this.logger.log('Insert new row to database...');
         this.db.run(sql, params, function (err) {
             if (err) {
-                return console.error(err.message);
+                return console.error('Could not insert new row to database. Error: ' + err.message);
             }
             console.log(`Rows inserted ${this.changes}`);
         });
