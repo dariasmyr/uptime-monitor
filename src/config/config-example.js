@@ -1,7 +1,7 @@
 const config = {
     apiKey: "0000000000:00000000000000000000000000000000000",
     chatId: "0000000",
-    db: './example-path.db.sqbpro',
+    db: 'src/db.db',
     sites: [
         {
             url: "https://site.com",

@@ -1,44 +1,73 @@
-const sqlite3 = require('sqlite3');
+const {Sequelize} = require('sequelize');
 const {LoggerService} = require("./logger.service");
 
 const logger = new LoggerService('DatabaseRepository');
 
 class DatabaseRepository {
-    constructor(_db, _params) {
-        this.db = _db;
-        this.logger = new LoggerService('DatabaseRepository');
+    constructor() {
+        this.sequelize = new Sequelize({
+            dialect: 'sqlite',
+            storage: 'src/database.sqlite',
+            logging: (...msg) => console.log(msg)
+        });
     }
+
+    Error = sequelize.define('Error', {
+        // Model attributes are defined here
+        id: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        date_created: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        description: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        error_status: {
+            type: DataTypes.INT,
+            allowNull: false
+        },
+        site: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        }
+    }, {
+        // Other model options go here
+    });
 
     async openDb() {
         try {
-            this.db = new sqlite3.Database(this.db);
-            this.logger.log('Database opened');
+            await this.sequelize.authenticate();
+            logger.log('Database opened');
         } catch (err) {
-            this.logger.log('Database open error', err.message);
+            logger.log('Database open error', err.message);
         }
     }
 
 
     async addErrorToDatabase(params) {
-        this.logger.log('Params: ' + params);
+        logger.log('Params: ' + params);
         let sql = ('INSERT INTO errors(date_created, description, error_status, site) VALUES (?), (?), (?), (?)');
-        this.logger.log('SQLquery: ' + sql);
+        logger.log('SQLquery: ' + sql);
 
-        this.logger.log('Insert new row to database...');
+        logger.log('Insert new row to database...');
         this.db.run(sql, params, function (err) {
             if (err) {
                 return console.error('Could not insert new row to database. Error: ' + err.message);
             }
-            console.log(`Rows inserted ${this.changes}`);
+            logger.log(`Rows inserted ${this.changes}`);
         });
 
     }
 
 
     // close DB
-    async closeDb(db) {
+    async closeDb() {
         try {
-            await db.close();
+            await this.sequelize.close();
             logger.log('Database closed');
         } catch (err) {
             logger.log('Database close error', err.message);
