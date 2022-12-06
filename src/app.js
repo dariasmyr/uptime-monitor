@@ -2,10 +2,13 @@ const config = require('./config/config.js');
 const {TelegramRepository} = require('./telegram.repository');
 const {LoggerService} = require("./logger.service");
 const {AvailableCheckerService} = require('./available-checker.service');
+const {DatabaseRepository} = require('./database.repository');
 
 async function main() {
     const telegramRepository = new TelegramRepository(config.apiKey, config.chatId);
     await telegramRepository.sendMessage('Bot started');
+    const databaseRepository = new DatabaseRepository(config.db);
+    await databaseRepository.openDb();
 
     const logger = new LoggerService('main', true);
     // logger.enabled = false;
@@ -23,6 +26,7 @@ async function main() {
             if (!result) {
                 await telegramRepository.sendMessage(`Site ${site.url} is not available. ${message}`);
             }
+            await databaseRepository.addErrorToDatabase(databaseRepository.db, site.url, message, result, pingTime);
         }, site.intervalMs);
     }
     logger.log('Monitoring sites...');
