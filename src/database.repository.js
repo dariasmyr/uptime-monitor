@@ -1,79 +1,66 @@
-const {Sequelize} = require('sequelize');
+const {Sequelize, DataTypes} = require('sequelize');
 const {LoggerService} = require("./logger.service");
 
 const logger = new LoggerService('DatabaseRepository');
 
-class DatabaseRepository {
-    constructor() {
-        this.sequelize = new Sequelize({
-            dialect: 'sqlite',
-            storage: 'src/database.sqlite',
-            logging: (...msg) => console.log(msg)
-        });
+const sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: 'src/database.sqlite',
+    logging: (...msg) => console.log(msg)
+});
+
+Error = sequelize.define('Error', {
+    // Model attributes are defined here
+    id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    date_created: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        allowNull: false
+    },
+    description: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    error_status: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    site: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
+}, {
+    // Other model options go here
+    sequelize,
+    freezeTableName: true,
+    timestamps: true
+});
 
-    Error = sequelize.define('Error', {
-        // Model attributes are defined here
-        id: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        date_created: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        description: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
-        error_status: {
-            type: DataTypes.INT,
-            allowNull: false
-        },
-        site: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        }
-    }, {
-        // Other model options go here
-    });
-
-    async openDb() {
+class Error extends require('sequelize').Model {
+    static async openDB() {
+        // Synchronise with database
         try {
-            await this.sequelize.authenticate();
-            logger.log('Database opened');
+            await Error.sync({alter: true});
+            logger.log("All models were synchronized successfully.");
         } catch (err) {
             logger.log('Database open error', err.message);
         }
     }
 
-
     async addErrorToDatabase(params) {
-        logger.log('Params: ' + params);
-        let sql = ('INSERT INTO errors(date_created, description, error_status, site) VALUES (?), (?), (?), (?)');
-        logger.log('SQLquery: ' + sql);
-
-        logger.log('Insert new row to database...');
-        this.db.run(sql, params, function (err) {
-            if (err) {
-                return console.error('Could not insert new row to database. Error: ' + err.message);
-            }
-            logger.log(`Rows inserted ${this.changes}`);
-        });
-
-    }
-
-
-    // close DB
-    async closeDb() {
+        logger.log('Adding row with params: ' + params);
         try {
-            await this.sequelize.close();
-            logger.log('Database closed');
-        } catch (err) {
-            logger.log('Database close error', err.message);
-        }
+         Error.create = ({date_created: pingTime, description: message, error_status: result, site: site.url})
+                logger.log('Row added: ' + params);
+            } catch (err) {
+                logger.log('Error adding row: ' + err);
+            }
     }
 }
+
 
 module.exports = {
     DatabaseRepository
