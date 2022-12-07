@@ -8,7 +8,7 @@ async function main() {
     const telegramRepository = new TelegramRepository(config.apiKey, config.chatId);
     await telegramRepository.sendMessage('Bot started');
     const databaseRepository = new DatabaseRepository(config.db);
-    await databaseRepository.openDb();
+    await databaseRepository.openDB();
 
     const logger = new LoggerService('main', true);
     // logger.enabled = false;
