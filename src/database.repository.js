@@ -64,7 +64,6 @@ class DatabaseRepository {
 
 }
 
-
 module.exports = {
     DatabaseRepository
 }
