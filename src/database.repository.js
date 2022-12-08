@@ -9,13 +9,6 @@ const sequelize = new Sequelize({
     logging: (...msg) => console.log(...msg)
 });
 
-// create the model ErrorRecord with fields:
-// id: int primary key
-// date_created: date
-// description: text
-// error_status: int
-// site: text
-
 class ErrorRecord extends Model {
 }
 
@@ -25,16 +18,12 @@ ErrorRecord.init({
         primaryKey: true,
         autoIncrement: true
     },
-    date_created: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
     description: {
         type: DataTypes.TEXT,
         allowNull: false
     },
     error_status: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.TEXT,
         allowNull: false
     },
     site: {
@@ -44,6 +33,7 @@ ErrorRecord.init({
 }, {
     sequelize,
     updatedAt: false,
+    createdAt: 'date_created',
     modelName: 'error_record',
     indexes: [{ unique: true, fields: ['id'] }]
 });
@@ -56,13 +46,12 @@ class DatabaseRepository {
 
 
     async addErrorToDatabase(params) {
-        const {pingTime, message, result, url} = params;
+        const {message, result, url} = params;
         logger.log('Adding row with params: ', JSON.stringify(params));
         try {
             const row = await ErrorRecord.create ({
-                date_created: pingTime,
                 description: message,
-                error_status: result,
+                error_status: result.toString(),
                 site: url
             });
             logger.log('Row added: ' , JSON.stringify(row));
