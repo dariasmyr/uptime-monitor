@@ -1,7 +1,7 @@
 const config = {
     apiKey: "0000000000:00000000000000000000000000000000000",
     chatId: "0000000",
-    db: 'src/db.db',
+    db: ' ',
     sites: [
         {
             url: "https://site.com",
