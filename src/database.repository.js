@@ -48,23 +48,24 @@ ErrorRecord.init({
 });
 
 class DatabaseRepository {
-     async openDB() {
+    async openDB() {
         await ErrorRecord.sync({alter: true});
         logger.log('Database opened');
     }
 
     async addErrorToDatabase(params) {
-        logger.log('Adding row with params: ' + params);
+        const {pingTime, message, result, url} = params;
+        logger.log('Adding row with params: ', JSON.stringify(params));
         try {
-            const row = DatabaseRepository.create = ({
+            const row = ErrorRecord.create = ({
                 date_created: pingTime,
                 description: message,
                 error_status: result,
-                site: site.url
+                site: url
             })
-            logger.log('Row added: ' + params)
-            console.log(row instanceof Error); // true
-            console.log(row.name);
+            logger.log('Row added: ' , JSON.stringify(params));
+            logger.log(row instanceof ErrorRecord); // true
+            logger.log(row.toJSON());
         } catch (err) {
             logger.log('Error adding row: ' + err);
         }

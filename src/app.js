@@ -26,8 +26,8 @@ async function main() {
             if (!result) {
                 await telegramRepository.sendMessage(`Site ${site.url} is not available. ${message}`);
             }
-            const params = [pingTime, message, result, site.url];
-            logger.log(params);
+            const params = {pingTime, message, result, url: site.url};
+            logger.log(JSON.stringify(params));
             await databaseRepository.addErrorToDatabase(params);
         }, site.intervalMs);
     }
