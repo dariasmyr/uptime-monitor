@@ -6,8 +6,7 @@ const logger = new LoggerService('DatabaseRepository');
 const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: 'src/database.sqlite',
-    logging: (...msg) => console.log(msg),
-    createdAt: false
+    logging: (...msg) => console.log(...msg)
 });
 
 // create the model ErrorRecord with fields:
@@ -44,7 +43,9 @@ ErrorRecord.init({
     }
 }, {
     sequelize,
-    modelName: 'error_record'
+    updatedAt: false,
+    modelName: 'error_record',
+    indexes: [{ unique: true, fields: ['id'] }]
 });
 
 class DatabaseRepository {
@@ -53,23 +54,25 @@ class DatabaseRepository {
         logger.log('Database opened');
     }
 
+
     async addErrorToDatabase(params) {
         const {pingTime, message, result, url} = params;
         logger.log('Adding row with params: ', JSON.stringify(params));
         try {
-            const row = ErrorRecord.create = ({
+            const row = await ErrorRecord.create ({
                 date_created: pingTime,
                 description: message,
                 error_status: result,
                 site: url
-            })
-            logger.log('Row added: ' , JSON.stringify(params));
+            });
+            logger.log('Row added: ' , JSON.stringify(row));
             logger.log(row instanceof ErrorRecord); // true
-            logger.log(row.toJSON());
+            logger.log(row.id);// 1
         } catch (err) {
             logger.log('Error adding row: ' + err);
         }
     }
+
 }
 
 
