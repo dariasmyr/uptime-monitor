@@ -9,6 +9,10 @@ class LoggerService {
         this.loggerName = _loggerName;
         this.showTimestamp = _showTimestamp;
         this.enabled = true;
+
+
+
+
     }
 
     log(...msg) {

@@ -30,6 +30,18 @@ async function main() {
                 await databaseRepository.addErrorToDatabase(params);
             }
         }, site.intervalMs);
+
+        const limit = config.limit;
+        setInterval(async function () {
+            try {
+                await databaseRepository.garbageCollector(limit);
+                logger.log('Garbage collector finished');
+            } catch (err) {
+                logger.log('Garbage collector error', err);
+            }
+        }, config.garbageCollectorIntervalMs);
+
+
     }
     logger.log('Monitoring sites...');
 }

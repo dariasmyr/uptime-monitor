@@ -6,7 +6,7 @@ const logger = new LoggerService('DatabaseRepository');
 const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: 'src/database.sqlite',
-    logging: (...msg) => console.log(...msg)
+    // logging: (...msg) => console.log(...msg)
 });
 
 class ErrorRecord extends Model {
@@ -60,6 +60,19 @@ class DatabaseRepository {
         } catch (err) {
             logger.log('Error adding row: ' + err);
         }
+    }
+
+
+    async garbageCollector (limit) {
+        const { Op } = require("sequelize");
+        await ErrorRecord.destroy({
+            where: {
+                id: {
+                    [Op.gt]: limit
+                }
+            }
+        });
+        logger.log('Garbage collector finished');
     }
 
 }
