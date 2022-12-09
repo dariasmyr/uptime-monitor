@@ -2,8 +2,8 @@ const config = {
     apiKey: "0000000000:00000000000000000000000000000000000",
     chatId: "0000000",
     db: ' ',
-    limit: 10,
-    garbageCollectorIntervalMs: 6000,
+    limit: 0,
+    garbageCollectorIntervalMs: 0,
     sites: [
         {
             url: "https://site.com",

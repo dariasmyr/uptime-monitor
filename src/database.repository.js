@@ -35,7 +35,7 @@ ErrorRecord.init({
     updatedAt: false,
     createdAt: 'date_created',
     modelName: 'error_record',
-    indexes: [{ unique: true, fields: ['id'] }]
+    indexes: [{unique: true, fields: ['id']}]
 });
 
 class DatabaseRepository {
@@ -49,12 +49,12 @@ class DatabaseRepository {
         const {message, result, url} = params;
         logger.log('Adding row with params: ', JSON.stringify(params));
         try {
-            const row = await ErrorRecord.create ({
+            const row = await ErrorRecord.create({
                 description: message,
                 error_status: result.toString(),
                 site: url
             });
-            logger.log('Row added: ' , JSON.stringify(row));
+            logger.log('Row added: ', JSON.stringify(row));
             logger.log(row instanceof ErrorRecord); // true
             logger.log(row.id);// 1
         } catch (err) {
@@ -63,16 +63,22 @@ class DatabaseRepository {
     }
 
 
-    async garbageCollector (limit) {
-        const { Op } = require("sequelize");
-        await ErrorRecord.destroy({
-            where: {
-                id: {
-                    [Op.gt]: limit
-                }
-            }
-        });
-        logger.log('Garbage collector finished');
+    async deleteOldRecords(countToKeep) {
+        const total = await ErrorRecord.count();
+        logger.log('Total rows:', total);
+        if (total > countToKeep) {
+            const rowsToDelete = total - countToKeep;
+            logger.log('Deleting', rowsToDelete, 'rows');
+            const res = await ErrorRecord.destroy({
+                where: {},
+                limit: rowsToDelete,
+                order: [
+                    ['date_created', 'ASC']
+                ]
+            });
+            logger.log('Deleted', res, 'rows');
+        }
+        logger.log('No rows deleted');
     }
 
 }

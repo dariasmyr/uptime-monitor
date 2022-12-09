@@ -34,10 +34,10 @@ async function main() {
         const limit = config.limit;
         setInterval(async function () {
             try {
-                await databaseRepository.garbageCollector(limit);
-                logger.log('Garbage collector finished');
+                await databaseRepository.deleteOldRecords(limit);
+                logger.log('Old records deleted');
             } catch (err) {
-                logger.log('Garbage collector error', err);
+                logger.log('Error while deleting old records: ', err);
             }
         }, config.garbageCollectorIntervalMs);
 
