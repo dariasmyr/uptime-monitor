@@ -1,4 +1,4 @@
-const {Sequelize, DataTypes, Model} = require('sequelize');
+const {Sequelize, DataTypes, Model, Op} = require('sequelize');
 const {LoggerService} = require("./logger.service");
 
 const logger = new LoggerService('DatabaseRepository');
@@ -67,20 +67,30 @@ class DatabaseRepository {
         const total = await ErrorRecord.count();
         logger.log('Total rows:', total);
         if (total > countToKeep) {
-            const rowsToDelete = total - countToKeep;
-            logger.log('Deleting', rowsToDelete, 'rows');
-            const res = await ErrorRecord.destroy({
-                where: {},
-                limit: rowsToDelete,
-                order: [
-                    ['date_created', 'ASC']
-                ]
-            });
-            logger.log('Deleted', res, 'rows');
-        }
-        logger.log('No rows deleted');
-    }
+            // Find latest countToKeep rows, and delete all others rows
 
+            const rowsToDelete = await ErrorRecord.findAll({
+                order: [['id', 'DESC']],
+                offset: countToKeep
+            });
+
+            const idsToDelete = rowsToDelete.map(row => row.id);
+            logger.log('Deleting rows with ids: ', idsToDelete);
+
+            const deletedRows = await ErrorRecord.destroy({
+                where: {
+                    id: {
+                        [Op.in]: idsToDelete
+                    }
+                }
+            });
+
+            logger.log('Deleted rows: ', deletedRows);
+        }
+        else {
+            console.log('No rows deleted');
+        }
+    }
 }
 
 module.exports = {

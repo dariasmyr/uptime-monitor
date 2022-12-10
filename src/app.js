@@ -10,6 +10,16 @@ async function main() {
     const databaseRepository = new DatabaseRepository(config.db);
     await databaseRepository.openDB();
 
+    const limit = config.limit;
+    setInterval(async function () {
+        try {
+            await databaseRepository.deleteOldRecords(limit);
+            logger.log('Old records deleted');
+        } catch (err) {
+            logger.log('Error while deleting old records: ', err);
+        }
+    }, config.garbageCollectorIntervalMs);
+
     const logger = new LoggerService('main', true);
     // logger.enabled = false;
 
@@ -30,18 +40,6 @@ async function main() {
                 await databaseRepository.addErrorToDatabase(params);
             }
         }, site.intervalMs);
-
-        const limit = config.limit;
-        setInterval(async function () {
-            try {
-                await databaseRepository.deleteOldRecords(limit);
-                logger.log('Old records deleted');
-            } catch (err) {
-                logger.log('Error while deleting old records: ', err);
-            }
-        }, config.garbageCollectorIntervalMs);
-
-
     }
     logger.log('Monitoring sites...');
 }

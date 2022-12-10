@@ -194,6 +194,4 @@ dist
 /src/config
 !/src/config/config-example.js
 
-/src/uptime.db.sqbpro
-/src/db.db
 /src/database.sqlite
