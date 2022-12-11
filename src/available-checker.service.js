@@ -11,7 +11,7 @@ class AvailableCheckerService {
      */
     static async isSiteAvailableViaHttp(url) {
         const executionStart = Date.now();
-        // Download url and check status is 200
+        // Download url and check status is 200-299
         try {
             const httpRes = await axios.get(url);
             const result = (httpRes.status >= 200) && (httpRes.status <= 299);
