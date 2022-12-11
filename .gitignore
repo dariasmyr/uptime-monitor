@@ -191,7 +191,8 @@ dist
 
 .idea
 
-/src/config
-!/src/config/config-example.js
+src/config
+!src/config/config-example.js
 
-/src/database.sqlite
+!data/.gitkeep
+data

@@ -9,8 +9,9 @@ class AvailableCheckerService {
      * @param url
      * @returns {Promise<{result: boolean, message: string}>}
      */
-    static async httpCheck(url) {
-        // Download url and check status is 200
+    static async isSiteAvailableViaHttp(url) {
+        const executionStart = Date.now();
+        // Download url and check status is 200-299
         try {
             const httpRes = await axios.get(url);
             const result = (httpRes.status >= 200) && (httpRes.status <= 299);
@@ -18,14 +19,17 @@ class AvailableCheckerService {
                 result,
                 message: `HTTP status ${httpRes.status}`
             }
-            logger.log(url, 'OK', resolve.message);
+            logger.debug(url, 'OK', resolve.message);
             return resolve;
         } catch (err) {
-            logger.log(url, 'ERR', err.message);
+            logger.error(url, 'ERR', err.message);
             return {
                 result: false,
                 message: err.message.toString()
             }
+        } finally {
+            const executionEnd = Date.now();
+            logger.debug(url, 'Execution time', executionEnd - executionStart, 'ms');
         }
     }
 }

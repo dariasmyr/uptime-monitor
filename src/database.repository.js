@@ -3,81 +3,84 @@ const {LoggerService} = require("./logger.service");
 
 const logger = new LoggerService('DatabaseRepository');
 
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: 'src/database.sqlite',
-    // logging: (...msg) => console.log(...msg)
-});
-
-class ErrorRecord extends Model {
+class DownTimeReport extends Model {
 }
 
-ErrorRecord.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    description: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    error_status: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    site: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    }
-}, {
-    sequelize,
-    updatedAt: false,
-    createdAt: 'date_created',
-    modelName: 'error_record',
-    indexes: [{unique: true, fields: ['id']}]
-});
-
 class DatabaseRepository {
-    async openDB() {
-        await ErrorRecord.sync({alter: true});
-        logger.log('Database opened');
+    constructor(_pathToDbFile) {
+        this.pathToDbFile = _pathToDbFile;
     }
 
+    async init() {
+        const sequelize = new Sequelize({
+            dialect: 'sqlite',
+            storage: this.pathToDbFile,
+            // logging: (...msg) => console.log(...msg)
+        });
 
-    async addErrorToDatabase(params) {
-        const {message, result, url} = params;
-        logger.log('Adding row with params: ', JSON.stringify(params));
+        DownTimeReport.init({
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            description: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            },
+            error_status: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            },
+            site: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            }
+        }, {
+            sequelize,
+            updatedAt: false,
+            createdAt: true,
+            tableName: 'down_time_reports',
+            indexes: [
+                {
+                    fields: ['id'],
+                    unique: true
+                }
+            ]
+        });
+
+        await DownTimeReport.sync({alter: true});
+        logger.debug('Database initialized');
+    }
+
+    async saveReport({message, result, url}) {
+        logger.debug('Saving report with params: ', JSON.stringify({message, result, url}, null, 2));
         try {
-            const row = await ErrorRecord.create({
+            const row = await DownTimeReport.create({
                 description: message,
                 error_status: result.toString(),
                 site: url
             });
-            logger.log('Row added: ', JSON.stringify(row));
-            logger.log(row instanceof ErrorRecord); // true
-            logger.log(row.id);// 1
+            logger.debug('Row added: ', JSON.stringify(row, null, 2), 'with id: ', row.id);
         } catch (err) {
-            logger.log('Error adding row: ' + err);
+            logger.error('Error adding row: ', err.message);
         }
     }
 
-
     async deleteOldRecords(countToKeep) {
-        const total = await ErrorRecord.count();
-        logger.log('Total rows:', total);
+        const total = await DownTimeReport.count();
+        logger.debug('Total rows:', total);
         if (total > countToKeep) {
             // Find latest countToKeep rows, and delete all others rows
-
-            const rowsToDelete = await ErrorRecord.findAll({
+            const rowsToDelete = await DownTimeReport.findAll({
                 order: [['id', 'DESC']],
                 offset: countToKeep
             });
 
             const idsToDelete = rowsToDelete.map(row => row.id);
-            logger.log('Deleting rows with ids: ', idsToDelete);
+            logger.debug('Deleting rows with ids:', idsToDelete);
 
-            const deletedRows = await ErrorRecord.destroy({
+            const deletedRows = await DownTimeReport.destroy({
                 where: {
                     id: {
                         [Op.in]: idsToDelete
@@ -85,9 +88,8 @@ class DatabaseRepository {
                 }
             });
 
-            logger.log('Deleted rows: ', deletedRows);
-        }
-        else {
+            logger.debug('Deleted rows:', deletedRows);
+        } else {
             console.log('No rows deleted');
         }
     }
