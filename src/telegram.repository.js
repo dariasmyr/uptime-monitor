@@ -13,9 +13,13 @@ class TelegramRepository {
         if (this.dryRun) {
             return this.logger.log('[Telegram dry run message]', message);
         }
-        this.logger.log('sendMessage', message);
-        const url = `https://api.telegram.org/bot${this.apiKey}/sendMessage?chat_id=${this.chatId}&text=${message}`;
-        return await axios.get(url);
+        try {
+            this.logger.log('sendMessage', message);
+            const url = `https://api.telegram.org/bot${this.apiKey}/sendMessage?chat_id=${this.chatId}&text=${message}`;
+            return await axios.get(url);
+        } catch (err) {
+            this.logger.log('Error while sending message to Telegram', err);
+        }
     }
 }
 
