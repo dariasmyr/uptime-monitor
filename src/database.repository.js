@@ -3,47 +3,50 @@ const {LoggerService} = require("./logger.service");
 
 const logger = new LoggerService('DatabaseRepository');
 
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: 'src/database.sqlite',
-    // logging: (...msg) => console.log(...msg)
-});
-
 class ErrorRecord extends Model {
 }
 
-ErrorRecord.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    description: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    error_status: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    site: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    }
-}, {
-    sequelize,
-    updatedAt: false,
-    createdAt: 'date_created',
-    modelName: 'error_record',
-    indexes: [{unique: true, fields: ['id']}]
-});
-
 class DatabaseRepository {
-    async openDB() {
-        await ErrorRecord.sync({alter: true});
-        logger.log('Database opened');
+    constructor(_pathToDbFile) {
+        this.pathToDbFile = _pathToDbFile;
     }
 
+    async init() {
+        const sequelize = new Sequelize({
+            dialect: 'sqlite',
+            storage: this.pathToDbFile,
+            // logging: (...msg) => console.log(...msg)
+        });
+
+        ErrorRecord.init({
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            description: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            },
+            error_status: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            },
+            site: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            }
+        }, {
+            sequelize,
+            updatedAt: false,
+            createdAt: 'date_created',
+            modelName: 'error_record',
+            indexes: [{unique: true, fields: ['id']}]
+        });
+
+        await ErrorRecord.sync({alter: true});
+        logger.log('Database initialized');
+    }
 
     async addErrorToDatabase(params) {
         const {message, result, url} = params;
@@ -86,8 +89,7 @@ class DatabaseRepository {
             });
 
             logger.log('Deleted rows: ', deletedRows);
-        }
-        else {
+        } else {
             console.log('No rows deleted');
         }
     }

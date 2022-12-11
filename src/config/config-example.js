@@ -1,9 +1,16 @@
+const path = require('path');
+
 const config = {
-    apiKey: "0000000000:00000000000000000000000000000000000",
-    chatId: "0000000",
-    db: ' ',
-    limit: 0,
-    garbageCollectorIntervalMs: 0,
+    db: {
+        filePath: path.join(__dirname, '..', '..', 'data', 'db.sqlite3')
+    },
+    telegram: {
+        apiKey: "0000000000:00000000000000000000000000000000000",
+        chatId: "0000000",
+        dryRun: false
+    },
+    keepLastRecordCount: 100,
+    oldRecordsDeleteIntervalMs: 10000,
     sites: [
         {
             url: "https://site.com",
@@ -14,8 +21,8 @@ const config = {
             intervalMs: 3000
         }
     ]
-}
+};
 
-module.exports = config
+module.exports = config;
 
 

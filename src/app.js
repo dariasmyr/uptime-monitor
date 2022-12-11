@@ -5,20 +5,19 @@ const {AvailableCheckerService} = require('./available-checker.service');
 const {DatabaseRepository} = require('./database.repository');
 
 async function main() {
-    const telegramRepository = new TelegramRepository(config.apiKey, config.chatId);
+    const telegramRepository = new TelegramRepository(config.telegram.apiKey, config.telegram.chatId, config.telegram.dryRun);
     await telegramRepository.sendMessage('Bot started');
-    const databaseRepository = new DatabaseRepository(config.db);
-    await databaseRepository.openDB();
+    const databaseRepository = new DatabaseRepository(config.db.filePath);
+    await databaseRepository.init();
 
-    const limit = config.limit;
     setInterval(async function () {
         try {
-            await databaseRepository.deleteOldRecords(limit);
+            await databaseRepository.deleteOldRecords(config.keepLastRecordCount);
             logger.log('Old records deleted');
         } catch (err) {
             logger.log('Error while deleting old records: ', err);
         }
-    }, config.garbageCollectorIntervalMs);
+    }, config.oldRecordsDeleteIntervalMs);
 
     const logger = new LoggerService('main', true);
     // logger.enabled = false;
