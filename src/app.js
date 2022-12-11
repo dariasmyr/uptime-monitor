@@ -34,9 +34,11 @@ async function main() {
             logger.log(`Ping ${site.url} result: ${result} in ${pingTime} ms`);
             if (!result) {
                 await telegramRepository.sendMessage(`Site ${site.url} is not available. ${message}`);
-                const params = {pingTime, message, result, url: site.url};
-                logger.log(JSON.stringify(params));
-                await databaseRepository.addErrorToDatabase(params);
+                await databaseRepository.saveReport({
+                    message,
+                    result,
+                    url: site.url
+                });
             }
         }, site.intervalMs);
     }

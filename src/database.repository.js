@@ -3,7 +3,7 @@ const {LoggerService} = require("./logger.service");
 
 const logger = new LoggerService('DatabaseRepository');
 
-class ErrorRecord extends Model {
+class DownTimeReport extends Model {
 }
 
 class DatabaseRepository {
@@ -18,7 +18,7 @@ class DatabaseRepository {
             // logging: (...msg) => console.log(...msg)
         });
 
-        ErrorRecord.init({
+        DownTimeReport.init({
             id: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
@@ -39,48 +39,48 @@ class DatabaseRepository {
         }, {
             sequelize,
             updatedAt: false,
-            createdAt: 'date_created',
-            modelName: 'error_record',
-            indexes: [{unique: true, fields: ['id']}]
+            createdAt: true,
+            tableName: 'down_time_reports',
+            indexes: [
+                {
+                    fields: ['id'],
+                    unique: true
+                }
+            ]
         });
 
-        await ErrorRecord.sync({alter: true});
+        await DownTimeReport.sync({alter: true});
         logger.log('Database initialized');
     }
 
-    async addErrorToDatabase(params) {
-        const {message, result, url} = params;
-        logger.log('Adding row with params: ', JSON.stringify(params));
+    async saveReport({message, result, url}) {
+        logger.log('Saving report with params: ', JSON.stringify({message, result, url}, null, 2));
         try {
-            const row = await ErrorRecord.create({
+            const row = await DownTimeReport.create({
                 description: message,
                 error_status: result.toString(),
                 site: url
             });
-            logger.log('Row added: ', JSON.stringify(row));
-            logger.log(row instanceof ErrorRecord); // true
-            logger.log(row.id);// 1
+            logger.log('Row added: ', JSON.stringify(row, null, 2), 'with id: ', row.id);
         } catch (err) {
-            logger.log('Error adding row: ' + err);
+            logger.log('Error adding row: ', err.message);
         }
     }
 
-
     async deleteOldRecords(countToKeep) {
-        const total = await ErrorRecord.count();
+        const total = await DownTimeReport.count();
         logger.log('Total rows:', total);
         if (total > countToKeep) {
             // Find latest countToKeep rows, and delete all others rows
-
-            const rowsToDelete = await ErrorRecord.findAll({
+            const rowsToDelete = await DownTimeReport.findAll({
                 order: [['id', 'DESC']],
                 offset: countToKeep
             });
 
             const idsToDelete = rowsToDelete.map(row => row.id);
-            logger.log('Deleting rows with ids: ', idsToDelete);
+            logger.log('Deleting rows with ids:', idsToDelete);
 
-            const deletedRows = await ErrorRecord.destroy({
+            const deletedRows = await DownTimeReport.destroy({
                 where: {
                     id: {
                         [Op.in]: idsToDelete
@@ -88,7 +88,7 @@ class DatabaseRepository {
                 }
             });
 
-            logger.log('Deleted rows: ', deletedRows);
+            logger.log('Deleted rows:', deletedRows);
         } else {
             console.log('No rows deleted');
         }
