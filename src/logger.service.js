@@ -34,7 +34,6 @@ class LoggerService {
             console.log(this.loggerName, '|', chalk.red.bold(...msg));
         }
     }
-
 }
 
 module.exports = {
