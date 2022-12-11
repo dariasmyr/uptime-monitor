@@ -18,21 +18,21 @@ async function main() {
         setInterval(async function () {
             try {
                 await databaseRepository.deleteOldRecords(config.keepLastRecordCount);
-                logger.log('Old records deleted');
+                logger.debug('Old records deleted');
             } catch (err) {
-                logger.log('Error while deleting old records: ', err);
+                logger.error('Error while deleting old records: ', err);
             }
         }, config.oldRecordsDeleteIntervalMs);
     }
 
     startDeleteOldRecordsInterval();
 
-    logger.log('Sites', JSON.stringify(config.sites, null, 2));
+    logger.debug('Sites', JSON.stringify(config.sites, null, 2));
     for (const site of config.sites) {
-        logger.log(`Start monitoring "${site.url}" with interval ${site.intervalMs}`);
+        logger.debug(`Start monitoring "${site.url}" with interval ${site.intervalMs}`);
         setInterval(async function () {
             const {result, message} = await AvailableCheckerService.isSiteAvailableViaHttp(site.url);
-            logger.log(`Result for "${site.url}": ${result}, message: ${message}`);
+            logger.debug(`Result for "${site.url}": ${result}, message: ${message}`);
             if (!result) {
                 await databaseRepository.saveReport({
                     message,
@@ -44,7 +44,7 @@ async function main() {
             }
         }, site.intervalMs);
     }
-    logger.log('Monitoring sites started...');
+    logger.debug('Monitoring sites started...');
 }
 
 main().catch(console.error);

@@ -19,17 +19,17 @@ class AvailableCheckerService {
                 result,
                 message: `HTTP status ${httpRes.status}`
             }
-            logger.log(url, 'OK', resolve.message);
+            logger.debug(url, 'OK', resolve.message);
             return resolve;
         } catch (err) {
-            logger.log(url, 'ERR', err.message);
+            logger.error(url, 'ERR', err.message);
             return {
                 result: false,
                 message: err.message.toString()
             }
         } finally {
             const executionEnd = Date.now();
-            logger.log(url, 'Execution time', executionEnd - executionStart, 'ms');
+            logger.debug(url, 'Execution time', executionEnd - executionStart, 'ms');
         }
     }
 }

@@ -9,23 +9,32 @@ class LoggerService {
         this.loggerName = _loggerName;
         this.showTimestamp = _showTimestamp;
         this.enabled = true;
-
-
-
-
     }
 
-    log(...msg) {
+    debug(...msg) {
         if (this.enabled === false) {
             return;
         }
 
         if (this.showTimestamp) {
-            console.log(chalk.bgCyanBright(new Date().toISOString()), '|', this.loggerName, '|', chalk.magenta(...msg));
+            console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.cyan(...msg));
         } else {
-            console.log(this.loggerName, '|', chalk.magenta(...msg));
+            console.log(this.loggerName, '|', chalk.cyan(...msg));
         }
     }
+
+    error(...msg) {
+        if (this.enabled === false) {
+            return;
+        }
+
+        if (this.showTimestamp) {
+            console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.red.bold(...msg));
+        } else {
+            console.log(this.loggerName, '|', chalk.red.bold(...msg));
+        }
+    }
+
 }
 
 module.exports = {

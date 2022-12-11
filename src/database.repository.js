@@ -50,26 +50,26 @@ class DatabaseRepository {
         });
 
         await DownTimeReport.sync({alter: true});
-        logger.log('Database initialized');
+        logger.debug('Database initialized');
     }
 
     async saveReport({message, result, url}) {
-        logger.log('Saving report with params: ', JSON.stringify({message, result, url}, null, 2));
+        logger.debug('Saving report with params: ', JSON.stringify({message, result, url}, null, 2));
         try {
             const row = await DownTimeReport.create({
                 description: message,
                 error_status: result.toString(),
                 site: url
             });
-            logger.log('Row added: ', JSON.stringify(row, null, 2), 'with id: ', row.id);
+            logger.debug('Row added: ', JSON.stringify(row, null, 2), 'with id: ', row.id);
         } catch (err) {
-            logger.log('Error adding row: ', err.message);
+            logger.error('Error adding row: ', err.message);
         }
     }
 
     async deleteOldRecords(countToKeep) {
         const total = await DownTimeReport.count();
-        logger.log('Total rows:', total);
+        logger.debug('Total rows:', total);
         if (total > countToKeep) {
             // Find latest countToKeep rows, and delete all others rows
             const rowsToDelete = await DownTimeReport.findAll({
@@ -78,7 +78,7 @@ class DatabaseRepository {
             });
 
             const idsToDelete = rowsToDelete.map(row => row.id);
-            logger.log('Deleting rows with ids:', idsToDelete);
+            logger.debug('Deleting rows with ids:', idsToDelete);
 
             const deletedRows = await DownTimeReport.destroy({
                 where: {
@@ -88,7 +88,7 @@ class DatabaseRepository {
                 }
             });
 
-            logger.log('Deleted rows:', deletedRows);
+            logger.debug('Deleted rows:', deletedRows);
         } else {
             console.log('No rows deleted');
         }
