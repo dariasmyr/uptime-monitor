@@ -19,6 +19,7 @@
   },
   "homepage": "https://gitlab.com/daria_smyr/uptime-monitor#readme",
   "devDependencies": {
+    "eslint": "^8.29.0",
     "nodemon": "^2.0.20"
   },
   "dependencies": {
