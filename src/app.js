@@ -47,4 +47,4 @@ async function main() {
     logger.debug('Monitoring sites started...');
 }
 
-main().catch(console.error);
+// main().catch(console.error);

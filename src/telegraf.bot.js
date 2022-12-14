@@ -1,9 +1,21 @@
 const config = require('./config/config.js');
-const { Telegraf } = require('telegraf');
+const {Telegraf} = require('telegraf');
 
 const bot = new Telegraf(config.telegram.apiKey)
-bot.start((ctx) => ctx.reply('Welcome'))
-bot.help((ctx) => ctx.reply('Send me a sticker'))
-bot.on('sticker', (ctx) => ctx.reply('👍'))
-bot.hears('hi', (ctx) => ctx.reply('Hey there'))
-bot.launch()
+
+async function communicateWithBot() {
+    console.log('Bot started');
+    bot.start(function (ctx) {
+        console.log(ctx);
+        return ctx.reply('Uptime monitor is active');
+    });
+    const message = 'Stats';
+    bot.on('hi', function (ctx) {
+        ctx.telegram.sendMessage(config.telegram.chatId, `Hello ${message}`)
+    });
+    await bot.launch();
+}
+
+communicateWithBot();
+
+
