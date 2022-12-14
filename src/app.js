@@ -17,7 +17,7 @@ async function main() {
     function startDeleteOldRecordsInterval() {
         setInterval(async function () {
             try {
-                await databaseRepository.deleteOldRecords(config.keepLastRecordCount);
+                await databaseRepository.deleteOldRecords();
                 logger.debug('Old records deleted');
             } catch (err) {
                 logger.error('Error while deleting old records: ', err);

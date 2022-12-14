@@ -14,13 +14,12 @@ class AvailableCheckerService {
         // Download url and check status is 200-299
         try {
             const httpRes = await axios.get(url);
-            const result = (httpRes.status >= 200) && (httpRes.status <= 299);
-            const resolve = {
-                result,
+            const result = {
+                result: (httpRes.status >= 200) && (httpRes.status <= 299),
                 message: `HTTP status ${httpRes.status}`
-            }
-            logger.debug(url, 'OK', resolve.message);
-            return resolve;
+            };
+            logger.debug(url, 'OK', resolution.message);
+            return result;
         } catch (err) {
             logger.error(url, 'ERR', err.message);
             return {
