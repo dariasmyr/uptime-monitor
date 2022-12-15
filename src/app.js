@@ -3,10 +3,13 @@ const {TelegramRepository} = require('./telegram.repository');
 const {LoggerService} = require("./logger.service");
 const {AvailableCheckerService} = require('./available-checker.service');
 const {DatabaseRepository} = require('./database.repository');
+const {CheckResultsRepository} = require("./check-results.repository");
 const logger = new LoggerService('main', true);
 
 async function main() {
     // logger.enabled = false;
+
+    const checkResultsRepository = new CheckResultsRepository();
 
     const telegramRepository = new TelegramRepository(config.telegram.apiKey, config.telegram.chatId, config.telegram.dryRun);
     await telegramRepository.sendMessage('Bot started');
@@ -32,6 +35,7 @@ async function main() {
         logger.debug(`Start monitoring "${site.url}" with interval ${site.intervalMs}`);
         setInterval(async function () {
             const {result, message} = await AvailableCheckerService.isSiteAvailableViaHttp(site.url);
+            checkResultsRepository.save(site.url, result, message);
             logger.debug(`Result for "${site.url}": ${result}, message: ${message}`);
             if (!result) {
                 await databaseRepository.saveReport({
