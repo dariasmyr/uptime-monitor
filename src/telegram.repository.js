@@ -1,12 +1,20 @@
 const axios = require("axios");
 const {LoggerService} = require("./logger.service");
+const {Telegraf} = require("telegraf");
 
 class TelegramRepository {
-    constructor(_apiKey, _chatId, _dryRun) {
+    constructor(_checkResultsRepository, _apiKey, _chatId, _dryRun) {
+        this.bot = new Telegraf(this.apiKey);
+        this.checkResultsRepository = _checkResultsRepository;
         this.apiKey = _apiKey;
         this.chatId = _chatId;
         this.dryRun = _dryRun;
         this.logger = new LoggerService('TelegramRepository');
+        this.bot.start(function (ctx) {
+            console.log(ctx);
+            return ctx.reply('Uptime monitor is active \n' + this.checkResultsRepository.getResultsAsJson());
+        });
+        this.bot.launch();
     }
 
     async sendMessage(message) {
@@ -22,6 +30,7 @@ class TelegramRepository {
         }
     }
 }
+
 
 module.exports = {
     TelegramRepository
