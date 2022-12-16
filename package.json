@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "npx nodemon src/app.js",
-    "telegraf": "npx nodemon src/telegraf.bot.js",
     "lint": "npx eslint src/app.js",
     "test": "npx jest src/app.js"
   },

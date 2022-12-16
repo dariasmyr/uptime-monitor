@@ -11,7 +11,7 @@ async function main() {
 
     const checkResultsRepository = new CheckResultsRepository();
 
-    const telegramRepository = new TelegramRepository(config.telegram.apiKey, config.telegram.chatId, config.telegram.dryRun);
+    const telegramRepository = new TelegramRepository(checkResultsRepository, config.telegram.apiKey, config.telegram.chatId, config.telegram.dryRun);
     await telegramRepository.sendMessage('Bot started');
 
     const databaseRepository = new DatabaseRepository(config.db.filePath);

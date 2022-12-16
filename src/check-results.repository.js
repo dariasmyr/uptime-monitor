@@ -10,12 +10,12 @@ class CheckResultsRepository {
         });
     }
 
-    getResultsAsJson() {
+   getResultsAsJson() {
         const results = {};
         for (const [url, result] of this.httpCheckResults.entries()) {
             results[url] = result;
         }
-        return results;
+        return JSON.stringify(results, null, 2);
     }
 }
 
