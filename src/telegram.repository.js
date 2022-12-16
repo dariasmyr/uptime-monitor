@@ -4,7 +4,6 @@ const {Telegraf} = require("telegraf");
 
 class TelegramRepository {
     constructor(_checkResultsRepository, _apiKey, _chatId, _dryRun) {
-        this.checkResultsRepository = _checkResultsRepository;
         this.apiKey = _apiKey;
         this.chatId = _chatId;
         this.dryRun = _dryRun;
@@ -12,7 +11,7 @@ class TelegramRepository {
         this.bot = new Telegraf(this.apiKey);
         this.bot.start(function (ctx) {
             console.log(ctx);
-            return ctx.reply('Uptime monitor is active \n' + this.checkResultsRepository.getResultsAsJson());
+            return ctx.reply(`Uptime monitor is active \n', ${_checkResultsRepository.getResultsAsJson()}.`);
         });
         this.bot.launch();
     }

@@ -45,6 +45,8 @@ async function main() {
                 });
 
                 await telegramRepository.sendMessage(`Site ${site.url} is not available. ${message}`);
+                checkResultsRepository.getResultsAsJson();
+                logger.debug('Map check results', checkResultsRepository.getResultsAsJson());
             }
         }, site.intervalMs);
     }
