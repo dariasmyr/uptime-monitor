@@ -20,7 +20,7 @@ async function main() {
     function startDeleteOldRecordsInterval() {
         setInterval(async function () {
             try {
-                await databaseRepository.deleteOldRecords();
+                await databaseRepository.deleteOldRecords(config.keepLastRecordCount);
                 logger.debug('Old records deleted');
             } catch (err) {
                 logger.error('Error while deleting old records: ', err);
@@ -46,7 +46,6 @@ async function main() {
 
                 await telegramRepository.sendMessage(`Site ${site.url} is not available. ${message}`);
                 checkResultsRepository.getResultsAsJson();
-                logger.debug('Map check results', checkResultsRepository.getResultsAsJson());
             }
         }, site.intervalMs);
     }
