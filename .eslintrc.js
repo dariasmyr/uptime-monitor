@@ -16,6 +16,9 @@ module.exports = {
     'parserOptions': {
         'ecmaVersion': 'latest'
     },
+    'plugins': [
+        'sonarjs'
+    ],
     'rules': {
         'indent': [
             'error',
