@@ -1,13 +1,18 @@
 module.exports = {
     'env': {
-        'browser': true,
+        'browser': false,
+        'node': true,
         'commonjs': true,
         'es2021': true
     },
     'root': true,
-    'extends': ['eslint:recommended', ],
-    'overrides': [
+    'extends': [
+        'eslint:recommended',
+        'plugin:sonarjs/recommended',
+        '@jetbrains',
+        '@jetbrains/eslint-config/node'
     ],
+    'overrides': [],
     'parserOptions': {
         'ecmaVersion': 'latest'
     },
