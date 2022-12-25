@@ -1,41 +1,41 @@
-const chalk = require("chalk");
+const chalk = require('chalk');
 
 class LoggerService {
-    constructor(_loggerName, _showTimestamp = true) {
-        if (!_loggerName) {
-            throw new Error('Logger name is required');
-        }
-
-        this.loggerName = _loggerName;
-        this.showTimestamp = _showTimestamp;
-        this.enabled = true;
+  constructor(_loggerName, _showTimestamp = true) {
+    if (!_loggerName) {
+      throw new Error('Logger name is required');
     }
 
-    debug(...msg) {
-        if (this.enabled === false) {
-            return;
-        }
+    this.loggerName = _loggerName;
+    this.showTimestamp = _showTimestamp;
+    this.enabled = true;
+  }
 
-        if (this.showTimestamp) {
-            console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.cyan(...msg));
-        } else {
-            console.log(this.loggerName, '|', chalk.cyan(...msg));
-        }
+  debug(...message) {
+    if (this.enabled === false) {
+      return;
     }
 
-    error(...msg) {
-        if (this.enabled === false) {
-            return;
-        }
-
-        if (this.showTimestamp) {
-            console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.red.bold(...msg));
-        } else {
-            console.log(this.loggerName, '|', chalk.red.bold(...msg));
-        }
+    if (this.showTimestamp) {
+      console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.cyan(...message));
+    } else {
+      console.log(this.loggerName, '|', chalk.cyan(...message));
     }
+  }
+
+  error(...message) {
+    if (this.enabled === false) {
+      return;
+    }
+
+    if (this.showTimestamp) {
+      console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.red.bold(...message));
+    } else {
+      console.log(this.loggerName, '|', chalk.red.bold(...message));
+    }
+  }
 }
 
 module.exports = {
-    LoggerService
-}
+  LoggerService
+};

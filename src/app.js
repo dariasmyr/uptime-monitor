@@ -1,9 +1,10 @@
 const config = require('./config/config.js');
-const { TelegramRepository } = require('./telegram.repository');
-const { LoggerService } = require("./logger.service");
-const { AvailableCheckerService } = require('./available-checker.service');
-const { DatabaseRepository } = require('./database.repository');
-const { CheckResultsRepository } = require("./check-results.repository");
+const {TelegramRepository} = require('./telegram.repository');
+const {LoggerService} = require('./logger.service');
+const {AvailableCheckerService} = require('./available-checker.service');
+const {DatabaseRepository} = require('./database.repository');
+const {CheckResultsRepository} = require('./check-results.repository');
+const {stringify} = require('./tools');
 const logger = new LoggerService('main', true);
 
 async function main() {
@@ -17,7 +18,7 @@ async function main() {
     config.telegram.chatId,
     config.telegram.dryRun
   );
-  await telegramRepository.sendMessage("Bot started");
+  await telegramRepository.sendMessage('Bot started');
 
   const databaseRepository = new DatabaseRepository(config.db.filePath);
   await databaseRepository.init();
@@ -26,22 +27,22 @@ async function main() {
     setInterval(async () => {
       try {
         await databaseRepository.deleteOldRecords(config.keepLastRecordCount);
-        logger.debug("Old records deleted");
+        logger.debug('Old records deleted');
       } catch (error) {
-        logger.error("Error while deleting old records: ", error);
+        logger.error('Error while deleting old records: ', error);
       }
     }, config.oldRecordsDeleteIntervalMs);
   }
 
   startDeleteOldRecordsInterval();
 
-  logger.debug("Sites", JSON.stringify(config.sites, null, 2));
+  logger.debug('Sites', stringify(config.sites));
   for (const site of config.sites) {
     logger.debug(
       `Start monitoring "${site.url}" with interval ${site.intervalMs}`
     );
     setInterval(async () => {
-      const { result, message } =
+      const {result, message} =
         await AvailableCheckerService.isSiteAvailableViaHttp(site.url);
       checkResultsRepository.save(site.url, result, message);
       logger.debug(`Result for "${site.url}": ${result}, message: ${message}`);
@@ -49,7 +50,7 @@ async function main() {
         await databaseRepository.saveReport({
           message,
           result,
-          url: site.url,
+          url: site.url
         });
 
         await telegramRepository.sendMessage(
@@ -59,7 +60,8 @@ async function main() {
       }
     }, site.intervalMs);
   }
-  logger.debug("Monitoring sites started...");
+  logger.debug('Monitoring sites started...');
 }
 
+// eslint-disable-next-line unicorn/prefer-top-level-await
 main().catch(console.error);
