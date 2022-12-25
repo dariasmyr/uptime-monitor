@@ -1,40 +1,87 @@
 module.exports = {
-    'env': {
-        'browser': false,
-        'node': true,
-        'commonjs': true,
-        'es2021': true
+  env: {
+    browser: false,
+    node: true,
+    commonjs: true,
+    es2021: true,
+  },
+  root: true,
+  extends: [
+    'eslint:recommended',
+    'plugin:sonarjs/recommended',
+    '@jetbrains',
+    "@jetbrains/eslint-config/node",
+    'plugin:security/recommended',
+    "plugin:unicorn/recommended",
+    "plugin:eslint-comments/recommended",
+    'plugin:jest/recommended',
+    'plugin:jest/style',
+    "plugin:promise/recommended",
+    'plugin:prettier/recommended',
+  ],
+  overrides: [
+    {
+      files: ["test/**"],
+      plugins: ["jest"],
+      extends: ["plugin:jest/recommended"],
     },
-    'root': true,
-    'extends': [
-        'eslint:recommended',
-        'plugin:sonarjs/recommended',
-        '@jetbrains',
-        '@jetbrains/eslint-config/node'
-    ],
-    'overrides': [],
-    'parserOptions': {
-        'ecmaVersion': 'latest'
+    {
+      files: ["**/*.md"],
+      extends: ["plugin:markdown/recommended"],
     },
-    'plugins': [
-        'sonarjs'
+  ],
+  parserOptions: {
+    ecmaVersion: "latest",
+  },
+  plugins: [
+    'sonarjs',
+    "unicorn",
+    "comments",
+    'jest',
+    'promise',
+    'markdown',
+    "security",
+    "no-secrets",
+    'prettier',
+  ],
+  rules: {
+    indent: 'off',
+    'linebreak-style': ["error", "unix"],
+    quotes: ["error", "single"],
+    semi: ["error", "always"],
+    'unicorn/prevent-abbreviations': [
+      'error',
+      {
+        allowList: { Param: true, Req: true, Res: true },
+      },
     ],
-    'rules': {
-        'indent': [
-            'error',
-            4
-        ],
-        'linebreak-style': [
-            'error',
-            'unix'
-        ],
-        'quotes': [
-            'error',
-            'single'
-        ],
-        'semi': [
-            'error',
-            'always'
-        ]
-    }
+    'no-secrets/no-secrets': "error",
+    'max-len': "off",
+    'no-return-assign': "off",
+    'no-magic-numbers': "warn",
+    'valid-jsdoc': "off",
+    'no-native-reassign': "off",
+    'multiline-ternary': "error",
+    'no-shadow': [
+      'error',
+      {
+        builtinGlobals: false,
+        hoist: "functions",
+        allow: [],
+        ignoreOnInitialization: false,
+      },
+    ],
+    'prettier/prettier': "error",
+    'no-multiple-empty-lines': "error",
+    'prefer-template': "error",
+    'prefer-spread': "error",
+    'prefer-arrow-callback': "error",
+    'no-var': "error",
+    'arrow-spacing': "error",
+  },
+  settings: {
+    jest: {
+      version: require("jest/package.json").version,
+    },
+  },
 };
