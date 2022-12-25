@@ -4,9 +4,11 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
+    "prestart": "npm run lint",
     "start": "node src/app.js",
     "dev": "npx nodemon src/app.js",
-    "lint": "npx eslint . --fix",
+    "lint": "npx eslint .",
+    "lint:fix": "npm run lint --fix",
     "test": "npx jest src/app.js"
   },
   "repository": {
