@@ -1,6 +1,7 @@
 const axios = require('axios');
 const {LoggerService} = require('./logger.service');
 const {Telegraf} = require('telegraf');
+const {stringify} = require('./tools');
 
 class TelegramRepository {
   constructor(_checkResultsRepository, _apiKey, _chatId, _dryRun) {
@@ -11,7 +12,8 @@ class TelegramRepository {
     this.bot = new Telegraf(this.apiKey);
     this.bot.start((context) => {
       console.log(context);
-      return context.reply(`Uptime monitor is active \n', ${_checkResultsRepository.getResultsAsJson()}.`);
+      const results = _checkResultsRepository.getResults();
+      return context.reply(`Uptime monitor is active \n', ${stringify(results)}.`);
     });
     this.bot.launch();
   }

@@ -1,5 +1,3 @@
-const {stringify} = require('./tools');
-
 class CheckResultsRepository {
   constructor() {
     this.httpCheckResults = new Map();
@@ -12,13 +10,13 @@ class CheckResultsRepository {
     });
   }
 
-  getResultsAsJson() {
+  getResults() {
     const results = {};
     for (const [url, result] of this.httpCheckResults.entries()) {
       // eslint-disable-next-line security/detect-object-injection
       results[url] = result;
     }
-    return stringify(results);
+    return results;
   }
 }
 

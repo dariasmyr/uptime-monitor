@@ -71,9 +71,9 @@ class DatabaseRepository {
         }
       });
 
-      const recordsToKeep = await DownTimeReport.count();
+      const recordsKept = await DownTimeReport.count();
       logger.debug('Deleted rows:', deletedRows);
-      return recordsToKeep;
+      return recordsKept;
     } else {
       console.log('No rows deleted');
     }

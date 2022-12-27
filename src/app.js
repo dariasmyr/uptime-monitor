@@ -3,7 +3,7 @@ const {TelegramRepository} = require('./telegram.repository');
 const {LoggerService} = require('./logger.service');
 const {AvailableCheckerService} = require('./available-checker.service');
 const {DatabaseRepository} = require('./database/database.repository');
-const {CheckResultsRepository} = require('./check-results.repository');
+const {CheckResultsRepository} = require('./check-results/check-results.repository');
 const {stringify} = require('./tools');
 const logger = new LoggerService('main', true);
 
@@ -56,7 +56,6 @@ async function main() {
         await telegramRepository.sendMessage(
           `Site ${site.url} is not available. ${message}`
         );
-        checkResultsRepository.getResultsAsJson();
       }
     }, site.intervalMs);
   }
