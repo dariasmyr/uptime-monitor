@@ -12,40 +12,24 @@ class DatabaseRepository {
 
   async init() {
     const sequelize = new Sequelize({
-      dialect: 'sqlite',
-      storage: this.pathToDbFile
+      dialect: 'sqlite', storage: this.pathToDbFile
       // logging: (...msg) => console.log(...msg)
     });
 
     DownTimeReport.init({
       id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-      },
-      description: {
-        type: DataTypes.TEXT,
-        allowNull: false
-      },
-      errorStatus: {
-        type: DataTypes.TEXT,
-        allowNull: false
-      },
-      site: {
-        type: DataTypes.TEXT,
-        allowNull: false
+        type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true
+      }, description: {
+        type: DataTypes.TEXT, allowNull: false
+      }, errorStatus: {
+        type: DataTypes.TEXT, allowNull: false
+      }, site: {
+        type: DataTypes.TEXT, allowNull: false
       }
     }, {
-      sequelize,
-      updatedAt: false,
-      createdAt: true,
-      tableName: 'down_time_reports',
-      indexes: [
-        {
-          fields: ['id'],
-          unique: true
-        }
-      ]
+      sequelize, updatedAt: false, createdAt: true, tableName: 'down_time_reports', indexes: [{
+        fields: ['id'], unique: true
+      }]
     });
 
     await DownTimeReport.sync({alter: true});
@@ -56,9 +40,7 @@ class DatabaseRepository {
     logger.debug('Saving report with params: ', stringify({message, result, url}));
     try {
       const row = await DownTimeReport.create({
-        description: message,
-        errorStatus: result.toString(),
-        site: url
+        description: message, errorStatus: result.toString(), site: url
       });
       logger.debug('Row added: ', stringify(row), 'with id: ', row.id);
       return true;
@@ -68,14 +50,14 @@ class DatabaseRepository {
     }
   }
 
+  // eslint-disable-next-line consistent-return
   async deleteOldRecords(countToKeep) {
     const total = await DownTimeReport.count();
     logger.debug('Total rows:', total);
     if (total > countToKeep) {
       // Find latest countToKeep rows, and delete all others rows
       const rowsToDelete = await DownTimeReport.findAll({
-        order: [['id', 'DESC']],
-        offset: countToKeep
+        order: [['id', 'DESC']], offset: countToKeep
       });
 
       const idsToDelete = rowsToDelete.map(row => row.id);
@@ -89,7 +71,9 @@ class DatabaseRepository {
         }
       });
 
+      const recordsToKeep = await DownTimeReport.count();
       logger.debug('Deleted rows:', deletedRows);
+      return recordsToKeep;
     } else {
       console.log('No rows deleted');
     }
