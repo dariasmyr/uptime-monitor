@@ -9,7 +9,7 @@
     "dev": "npx nodemon src/app.js",
     "lint": "npx eslint .",
     "lint:fix": "npm run lint --fix",
-    "test": "npx jest src/app.js"
+    "test": "jest"
   },
   "repository": {
     "type": "git",

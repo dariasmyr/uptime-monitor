@@ -77,7 +77,8 @@ module.exports = {
     "prefer-arrow-callback": "error",
     "no-var": "error",
     "arrow-spacing": "error",
-    "unicorn/prefer-module": "off"
+    "unicorn/prefer-module": "off",
+    "jest": "off",
   },
   settings: {
     jest: {
