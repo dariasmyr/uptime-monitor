@@ -61,8 +61,10 @@ class DatabaseRepository {
         site: url
       });
       logger.debug('Row added: ', stringify(row), 'with id: ', row.id);
+      return true;
     } catch (error) {
       logger.error('Error adding row: ', error.message);
+      return false;
     }
   }
 
