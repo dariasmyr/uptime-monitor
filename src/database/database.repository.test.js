@@ -19,7 +19,9 @@ describe('Database repository', () => {
   });
 
   test('should delete old records', async () => {
+    // eslint-disable-next-line no-magic-numbers
     const records = await databaseRepository.deleteOldRecords(3);
+    // eslint-disable-next-line no-magic-numbers
     expect(records).toBe(3);
   });
 

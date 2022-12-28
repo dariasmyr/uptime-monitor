@@ -78,7 +78,12 @@ module.exports = {
     "no-var": "error",
     "arrow-spacing": "error",
     "unicorn/prefer-module": "off",
-    "jest": "off",
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/prefer-to-have-length": "warn",
+    "jest/valid-expect": "error",
+    "jest/consistent-test-it": ["error", { fn: "test" }],
   },
   settings: {
     jest: {

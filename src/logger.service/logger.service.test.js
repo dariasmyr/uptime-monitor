@@ -9,5 +9,3 @@ describe('LoggerService', () => {
     expect(logger).toBeTruthy();
   });
 });
-
-
