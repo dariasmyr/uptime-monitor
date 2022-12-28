@@ -1,7 +1,7 @@
 const axios = require('axios');
-const {LoggerService} = require('./logger.service');
+const {LoggerService} = require('../logger.service/logger.service');
 const {Telegraf} = require('telegraf');
-const {stringify} = require('./tools');
+const {stringify} = require('../tools/tools');
 
 class TelegramRepository {
   constructor(_checkResultsRepository, _apiKey, _chatId, _dryRun) {
@@ -20,12 +20,21 @@ class TelegramRepository {
 
   async sendMessage(message) {
     if (this.dryRun) {
-      return this.logger.debug('[Telegram dry run message]', message);
+      this.logger.debug('[Telegram dry run message]', message);
+      return true;
     }
     try {
       this.logger.debug('sendMessage', message);
       const url = `https://api.telegram.org/bot${this.apiKey}/sendMessage?chat_id=${this.chatId}&text=${message}`;
-      return await axios.get(url);
+      const getResult = await axios.get(url);
+      // eslint-disable-next-line no-magic-numbers
+      if (getResult.status === 200) {
+        this.logger.debug('getResult status', getResult.status);
+        return true;
+      } else {
+        this.logger.error('Telegram error, ', getResult.status);
+        return false;
+      }
     } catch (error) {
       this.logger.error('Error while sending message to Telegram', error);
     }

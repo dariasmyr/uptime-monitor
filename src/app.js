@@ -1,10 +1,10 @@
 const config = require('./config/config.js');
-const {TelegramRepository} = require('./telegram.repository');
-const {LoggerService} = require('./logger.service');
-const {AvailableCheckerService} = require('./available-checker.service');
+const {TelegramRepository} = require('./telegram/telegram.repository');
+const {LoggerService} = require('./logger.service/logger.service');
+const {AvailableCheckerService} = require('./available-checker.service/available-checker.service');
 const {DatabaseRepository} = require('./database/database.repository');
 const {CheckResultsRepository} = require('./check-results/check-results.repository');
-const {stringify} = require('./tools');
+const {stringify} = require('./tools/tools');
 const logger = new LoggerService('main', true);
 
 async function main() {

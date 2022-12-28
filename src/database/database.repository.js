@@ -1,6 +1,6 @@
 const {Sequelize, DataTypes, Model, Op} = require('sequelize');
-const {LoggerService} = require('../logger.service');
-const {stringify} = require('../tools');
+const {LoggerService} = require('../logger.service/logger.service');
+const {stringify} = require('../tools/tools');
 const logger = new LoggerService('DatabaseRepository');
 
 class DownTimeReport extends Model {}
