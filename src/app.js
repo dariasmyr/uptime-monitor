@@ -12,8 +12,7 @@ const pingService = new PingService();
 
 
 function pinSite() {
-  const result = pingService.ping('google.com', 1);
-  console.log(result);
+  pingService.ping('gyde.one');
 }
 
 pinSite();
