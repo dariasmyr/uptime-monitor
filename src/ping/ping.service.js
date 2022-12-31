@@ -1,30 +1,27 @@
-const icmp = require('icmp');
 const {LoggerService} = require('../logger.service/logger.service');
-const os = require('node:os');
-
-const NON_ROOT_ERR_MSG = 'You must run ping service as root';
+const {exec} = require('node:child_process');
 
 class PingService {
   constructor() {
     this.logger = new LoggerService('PingService');
-    this.currentUsername = os.userInfo().username;
-    if (this.currentUsername !== 'root') {
-      this.logger.error(NON_ROOT_ERR_MSG);
-    }
   }
 
   /**
    * Ping host and return ping time in ms. Returns -1 if ping failed.
-   * @param host
-   * @returns {Promise<number>}
+   * @param host {string}
+   * @param count - number of pings
+   * @returns {Promise<number>} ping time in ms
    */
-  async ping(host) {
-    if (this.currentUsername !== 'root') {
-      this.logger.error(NON_ROOT_ERR_MSG);
-      return -1;
+  async ping(host, count = 1) {
+    // run ping command and parse output
+    const {stdout} = await exec(`ping -c ${count} ${host}`);
+    const lines = stdout.split('\n');
+    const lastLine = lines[lines.length - 2];
+    const match = lastLine.match(/time=(\d+) ms/);
+    if (match) {
+      return Number.parseInt(match[1], 10);
     }
-    const object = await icmp.ping(host);
-    return object.elapsed;
+    return -1;
   }
 }
 
