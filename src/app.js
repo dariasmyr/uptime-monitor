@@ -6,6 +6,17 @@ const {DatabaseRepository} = require('./database/database.repository');
 const {CheckResultsRepository} = require('./check-results/check-results.repository');
 const {stringify} = require('./tools/tools');
 const logger = new LoggerService('main', true);
+const {PingService} = require('./ping/ping.service');
+
+const pingService = new PingService();
+
+
+function pinSite() {
+  const result = pingService.ping('google.com', 1);
+  console.log(result);
+}
+
+pinSite();
 
 async function main() {
   // logger.enabled = false;
@@ -62,5 +73,6 @@ async function main() {
   logger.debug('Monitoring sites started...');
 }
 
+
 // eslint-disable-next-line unicorn/prefer-top-level-await
-main().catch(console.error);
+// main().catch(console.error);

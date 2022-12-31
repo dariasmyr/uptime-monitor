@@ -13,15 +13,32 @@ class PingService {
    * @returns {Promise<number>} ping time in ms
    */
   async ping(host, count = 1) {
-    // run ping command and parse output
-    const {stdout} = await exec(`ping -c ${count} ${host}`);
-    const lines = stdout.split('\n');
-    const lastLine = lines[lines.length - 2];
-    const match = lastLine.match(/time=(\d+) ms/);
-    if (match) {
-      return Number.parseInt(match[1], 10);
+    // run ping command from console
+    const command = `ping -c ${count} ${host}`;
+    this.logger.debug(`Run command: ${command}`);
+    const result = exec(command, (error, stdout, stderr) => {
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
     }
-    return -1;
+    );
+
+    // parse ping time
+    const regex = /time=(\d+) ms/g;
+    const stdout = await result.stdout;
+    console.log('stdout', stdout);
+    const matches = [...stdout.toString().matchAll(regex)];
+    console.log('matches', matches);
+    console.log('matches length', matches.length);
+    if (matches.length === 0) {
+      this.logger.error('Ping failed');
+      return -1;
+    }
+    const pingTime = matches[matches.length - 1][1];
+    this.logger.debug(`Ping time: ${pingTime} ms`);
+    return pingTime;
   }
 }
 
