@@ -195,4 +195,5 @@ src/config
 !src/config/config-example.js
 
 !data/.gitkeep
+data
 /coverage/

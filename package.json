@@ -39,7 +39,7 @@
   "dependencies": {
     "axios": "^1.2.1",
     "chalk": "4.1.2",
-    "ping": "^0.4.2",
+    "icmp": "^2.0.1",
     "sequelize": "^6.26.0",
     "sqlite3": "^5.1.2",
     "telegraf": "^4.11.2"
