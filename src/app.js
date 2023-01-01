@@ -8,18 +8,11 @@ const {stringify} = require('./tools/tools');
 const logger = new LoggerService('main', true);
 const {PingService} = require('./ping/ping.service');
 
-const pingService = new PingService();
-
-
-function pinSite() {
-  pingService.ping('gyde.one');
-}
-
-pinSite();
 
 async function main() {
   // logger.enabled = false;
 
+  const pingService = new PingService();
   const checkResultsRepository = new CheckResultsRepository();
 
   const telegramRepository = new TelegramRepository(
@@ -55,7 +48,11 @@ async function main() {
       const {result, message} =
         await AvailableCheckerService.isSiteAvailableViaHttp(site.url);
       checkResultsRepository.save(site.url, result, message);
-      logger.debug(`Result for "${site.url}": ${result}, message: ${message}`);
+      const siteHost = new URL(site.url).host;
+      logger.debug(`[IS SITE AVAILABLE CHECK] Result for "${site.url}": ${result}, message: ${message}`);
+      const pingTime =
+        await pingService.ping(siteHost);
+      logger.debug(pingTime > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${pingTime} ms` : `[PING CHECK] Result for host + ${siteHost} : is dead.`);
       if (!result) {
         await databaseRepository.saveReport({
           message,
@@ -74,4 +71,4 @@ async function main() {
 
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
-// main().catch(console.error);
+main().catch(console.error);
