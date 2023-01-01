@@ -12,12 +12,17 @@ class PingService {
       extra: ['-c', '1']
     });
     console.log(result);
-    if (result.alive) {
-      this.logger.debug(`Host ${host} is alive. Time: ${result.avg} ms`);
-      return Number.parseInt(result.avg, 10);
+    const pingResponse = {
+      isAlive: result.alive,
+      time: Number.parseInt(result.avg, 10)
+    };
+    if (pingResponse.isAlive) {
+      this.logger.debug(`Host ${host} is alive. Time: ${pingResponse.time} ms`);
+      return pingResponse;
     } else {
       this.logger.error(`Host ${host} is dead.`);
-      return -1;
+      pingResponse.time = -1;
+      return pingResponse;
     }
   }
 }

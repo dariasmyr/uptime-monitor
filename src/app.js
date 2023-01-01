@@ -47,12 +47,13 @@ async function main() {
     setInterval(async () => {
       const {result, message} =
         await AvailableCheckerService.isSiteAvailableViaHttp(site.url);
-      checkResultsRepository.save(site.url, result, message);
-      const siteHost = new URL(site.url).host;
       logger.debug(`[IS SITE AVAILABLE CHECK] Result for "${site.url}": ${result}, message: ${message}`);
-      const pingTime =
+      checkResultsRepository.saveHttp(site.url, result, message);
+      const siteHost = new URL(site.url).host;
+      const {isAlive, time} =
         await pingService.ping(siteHost);
-      logger.debug(pingTime > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${pingTime} ms` : `[PING CHECK] Result for host + ${siteHost} : is dead.`);
+      logger.debug(time > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${time} ms` : `[PING CHECK] Result for host + ${siteHost} : is dead.`);
+      checkResultsRepository.savePing(siteHost, isAlive, time);
       if (!result) {
         await databaseRepository.saveReport({
           message,

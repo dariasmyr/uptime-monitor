@@ -10,10 +10,15 @@ class TelegramRepository {
     this.dryRun = _dryRun;
     this.logger = new LoggerService('TelegramRepository');
     this.bot = new Telegraf(this.apiKey);
-    this.bot.start((context) => {
+    this.bot.command('httpstats', (context) => {
       console.log(context);
-      const results = _checkResultsRepository.getResults();
-      return context.reply(`Uptime monitor is active \n', ${stringify(results)}.`);
+      const httpResults = _checkResultsRepository.getHttpResults();
+      return context.reply(`Uptime monitor is active! \n Http check stats: ', ${stringify(httpResults)}.`);
+    });
+    this.bot.command('pingstats', (context) => {
+      console.log(context);
+      const pingResults = _checkResultsRepository.getPingResults();
+      return context.reply(`Uptime monitor is active! \n Ping check stats: ', ${stringify(pingResults)}.`);
     });
     this.bot.launch();
   }
