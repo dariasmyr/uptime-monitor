@@ -1,15 +1,18 @@
 const config = require('./config/config.js');
 const {TelegramRepository} = require('./telegram/telegram.repository');
 const {LoggerService} = require('./logger.service/logger.service');
-const {AvailableCheckerService} = require('./available-checker.service/available-checker.service');
+const {AvailableCheckerService} = require('./available-checker/available-checker.service');
 const {DatabaseRepository} = require('./database/database.repository');
 const {CheckResultsRepository} = require('./check-results/check-results.repository');
 const {stringify} = require('./tools/tools');
 const logger = new LoggerService('main', true);
+const {PingService} = require('./ping/ping.service');
+
 
 async function main() {
   // logger.enabled = false;
 
+  const pingService = new PingService();
   const checkResultsRepository = new CheckResultsRepository();
 
   const telegramRepository = new TelegramRepository(
@@ -45,7 +48,11 @@ async function main() {
       const {result, message} =
         await AvailableCheckerService.isSiteAvailableViaHttp(site.url);
       checkResultsRepository.save(site.url, result, message);
-      logger.debug(`Result for "${site.url}": ${result}, message: ${message}`);
+      const siteHost = new URL(site.url).host;
+      logger.debug(`[IS SITE AVAILABLE CHECK] Result for "${site.url}": ${result}, message: ${message}`);
+      const pingTime =
+        await pingService.ping(siteHost);
+      logger.debug(pingTime > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${pingTime} ms` : `[PING CHECK] Result for host + ${siteHost} : is dead.`);
       if (!result) {
         await databaseRepository.saveReport({
           message,
@@ -61,6 +68,7 @@ async function main() {
   }
   logger.debug('Monitoring sites started...');
 }
+
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
 main().catch(console.error);
