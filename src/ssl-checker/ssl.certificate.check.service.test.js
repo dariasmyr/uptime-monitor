@@ -6,6 +6,6 @@ describe('Check SSL certificate service', () => {
 
   test('should show SSL certificate', async () => {
     const results = await sslCertificateCheckService.getSiteCertificate('medium.com');
-    expect(results).toBe(true);
+    expect(results).toBeGreaterThan(0);
   });
 });

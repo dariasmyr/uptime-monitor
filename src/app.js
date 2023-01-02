@@ -7,6 +7,12 @@ const {CheckResultsRepository} = require('./check-results/check-results.reposito
 const {stringify} = require('./tools/tools');
 const logger = new LoggerService('main', true);
 const {PingService} = require('./ping/ping.service');
+const {SslCertificateCheckService} = require('./ssl-checker/ssl.certificate.check.service.js');
+
+const sslCertificateCheckService = new SslCertificateCheckService();
+
+// eslint-disable-next-line unicorn/prefer-top-level-await,promise/catch-or-return
+sslCertificateCheckService.getSiteCertificate('medium.com').then(r => console.log(r));
 
 
 async function main() {
