@@ -72,4 +72,4 @@ async function main() {
 
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
-main().catch(console.error);
+// main().catch(console.error);

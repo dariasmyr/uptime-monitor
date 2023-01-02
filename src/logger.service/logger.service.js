@@ -17,7 +17,7 @@ class LoggerService {
     }
 
     if (this.showTimestamp) {
-      console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.cyan(...message));
+      console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.yellowBright(...message));
     } else {
       console.log(this.loggerName, '|', chalk.cyan(...message));
     }
