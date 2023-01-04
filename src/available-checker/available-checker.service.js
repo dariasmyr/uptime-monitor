@@ -7,7 +7,7 @@ const AvailableCheckerService = {
   /**
      * Makes HTTP request to the given URL and returns true if the url is available and false if not
      * @param url
-     * @returns {Promise<{success: boolean, message: string}>}
+     * @returns {Promise<{result: boolean, message: string}>}
      */
   async isSiteAvailableViaHttp(url) {
     const executionStart = Date.now();
@@ -17,7 +17,7 @@ const AvailableCheckerService = {
     try {
       const httpRes = await axios.get(url);
       const result = {
-        success: (httpRes.status >= HTTP_STATUS_OK_MIN) && (httpRes.status <= HTTP_STATUS_OK_MAX),
+        result: (httpRes.status >= HTTP_STATUS_OK_MIN) && (httpRes.status <= HTTP_STATUS_OK_MAX),
         message: `HTTP status ${httpRes.status}`
       };
       logger.debug(url, 'OK', result.message);
