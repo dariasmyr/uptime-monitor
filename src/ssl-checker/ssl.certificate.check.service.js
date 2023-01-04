@@ -37,13 +37,14 @@ class SslCertificateCheckService {
   // calculate the remaining days of this certificate
   async getRemainingDays(_host, _timeout) {
     const certInfo = await this.getCertInfo(_host, _timeout);
-    const certValidTo = new Date(certInfo.validTo).valueOf();
+    const certExpirationDate = new Date(certInfo.validTo).valueOf();
     const now = Date.now();
-    if (certValidTo < now) {
+    if (certExpirationDate < now) {
       this.logger.error('Certificate is expired');
       return -1;
     } else {
-      const remainingDays = Math.floor((certValidTo - now) / 1000 / 60 / 60 / 24);
+      // eslint-disable-next-line no-magic-numbers
+      const remainingDays = Math.floor((certExpirationDate - now) / 1000 / 60 / 60 / 24);
       this.logger.debug(`Certificate is valid for ${remainingDays} days`);
       return remainingDays;
     }
