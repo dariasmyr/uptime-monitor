@@ -5,7 +5,7 @@ describe('Check results repository', () => {
   const checkResultsRepository = new CheckResultsRepository();
 
   test('should save result as json', () => {
-    checkResultsRepository.save('https://site.com', 'ok', 'some message');
+    checkResultsRepository.saveHttp('https://site.com', 'ok', 'some message');
     const results = checkResultsRepository.getHttpResults();
     const expected = {
       'https://site.com': {
