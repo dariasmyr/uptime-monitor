@@ -1,3 +1,5 @@
+const packageJson = require("jest/package.json");
+
 module.exports = {
   env: {
     browser: false,
@@ -87,7 +89,7 @@ module.exports = {
   },
   settings: {
     jest: {
-      version: require("jest/package.json").version,
+      version: packageJson.version,
     },
   },
 };

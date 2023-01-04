@@ -44,6 +44,7 @@ class CheckResultsRepository {
   getSslResults() {
     const results = {};
     for (const [host, daysLeft] of this.sslCheckResults.entries()) {
+      // eslint-disable-next-line security/detect-object-injection
       results[host] = daysLeft > 0 ? `Host ${host} is active. Certificate will expire in ${daysLeft} days.` : `Certificate for host ${host} is expired or doesn't exist. Error: ${daysLeft}`;
     }
     return results;

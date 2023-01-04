@@ -1,5 +1,5 @@
-.idea
-node_modules/
-data/
-src/config/config.js
+/.idea
+/node_modules/
+/data/
+/src/config/config.js
 /coverage/
