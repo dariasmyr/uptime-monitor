@@ -2,6 +2,7 @@ const axios = require('axios');
 const {LoggerService} = require('../logger/logger.service');
 const {Telegraf} = require('telegraf');
 const {stringifyFormatted} = require('../tools/tools');
+const {CheckResultsFormatterService} = require('../check-results/check-results-formatter.service');
 
 class TelegramRepository {
   constructor(_checkResultsRepository, _apiKey, _chatId, _dryRun) {
@@ -23,16 +24,7 @@ class TelegramRepository {
     const pingResults = this.checkResultsRepository.getPingResults();
     const sslResults = this.checkResultsRepository.getSslResults();
 
-    return telegrafContext.reply(`
-        HTTP results:
-        ${stringifyFormatted(httpResults)}
-        
-        Ping results:
-        ${stringifyFormatted(pingResults)}
-        
-        SSL results:
-        ${stringifyFormatted(sslResults)}
-        `);
+    return telegrafContext.reply(CheckResultsFormatterService.formatResults(httpResults, pingResults, sslResults));
   }
 
   async sendMessage(message) {
