@@ -1,16 +1,24 @@
 const {CheckResultsRepository} = require('./check-results.repository');
 
 describe('Check results repository', () => {
+  let checkResultsRepository;
 
-  const checkResultsRepository = new CheckResultsRepository();
+  beforeAll(async () => {
+    checkResultsRepository = new CheckResultsRepository();
+  });
 
   test('should save result as json', () => {
-    checkResultsRepository.saveHttp('https://site.com', 'ok', 'some message');
+    const SITE_URL = 'https://site.com';
+    const IS_ALIVE = true;
+    const MESSAGE = 'some message';
+
+    checkResultsRepository.saveHttp(SITE_URL, IS_ALIVE, MESSAGE);
+
     const results = checkResultsRepository.getHttpResults();
     const expected = {
-      'https://site.com': {
-        result: 'ok',
-        message: 'some message'
+      [SITE_URL]: {
+        isAlive: IS_ALIVE,
+        message: MESSAGE
       }
     };
     expect(results).toMatchObject(expected);

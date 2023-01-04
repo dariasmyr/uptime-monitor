@@ -1,13 +1,14 @@
 class CheckResultsRepository {
   constructor() {
+    // todo migrate to single map
     this.httpCheckResults = new Map();
     this.pingCheckResults = new Map();
     this.sslCheckResults = new Map();
   }
 
-  saveHttp(url, result, message) {
-    this.httpCheckResults.set(url, {
-      result,
+  saveHttp(host, isAlive, message) {
+    this.httpCheckResults.set(host, {
+      isAlive,
       message
     });
   }

@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {LoggerService} = require('../logger.service/logger.service');
+const {LoggerService} = require('../logger/logger.service');
 
 const logger = new LoggerService('AvailableCheckerService');
 

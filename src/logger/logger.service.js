@@ -1,6 +1,8 @@
 const chalk = require('chalk');
 
 class LoggerService {
+  // todo migrate logger to some good NPM library
+
   constructor(_loggerName, _showTimestamp = true) {
     if (!_loggerName) {
       throw new Error('Logger name is required');

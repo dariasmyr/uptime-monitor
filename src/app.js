@@ -1,20 +1,18 @@
 const config = require('./config/config.js');
 const {TelegramRepository} = require('./telegram/telegram.repository');
-const {LoggerService} = require('./logger.service/logger.service');
+const {LoggerService} = require('./logger/logger.service');
 const {AvailableCheckerService} = require('./available-checker/available-checker.service');
 const {DatabaseRepository} = require('./database/database.repository');
 const {CheckResultsRepository} = require('./check-results/check-results.repository');
-const {stringify} = require('./tools/tools');
+const {stringifyFormatted} = require('./tools/tools');
 const logger = new LoggerService('main', true);
 const {PingService} = require('./ping/ping.service');
-const {SslCertificateCheckService} = require('./ssl-checker/ssl.certificate.check.service.js');
-
+const {SslCertificateCheckService} = require('./ssl-checker/ssl-certificate-check.service.js');
 
 // logger.enabled = false;
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 async function main() {
-
   const sslCertificateCheckService = new SslCertificateCheckService();
   const pingService = new PingService();
   const checkResultsRepository = new CheckResultsRepository();
@@ -43,7 +41,7 @@ async function main() {
 
   startDeleteOldRecordsInterval();
 
-  logger.debug('Sites', stringify(config.sites));
+  logger.debug('Sites', stringifyFormatted(config.sites));
   for (const site of config.sites) {
     logger.debug(
       `Start monitoring "${site.url}" with interval ${site.intervalMs}`

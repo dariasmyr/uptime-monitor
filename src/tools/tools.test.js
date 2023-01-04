@@ -1,4 +1,4 @@
-const {stringify} = require('./tools');
+const {stringifyFormatted} = require('./tools');
 
 describe('Tools', () => {
   test('should stringify object', () => {
@@ -6,9 +6,9 @@ describe('Tools', () => {
       a: 1,
       b: 2
     };
-    const result = stringify(object);
-    // eslint-disable-next-line no-magic-numbers
-    const expected = JSON.stringify(object, undefined, 2);
+    const INDENT = 2;
+    const result = stringifyFormatted(object, INDENT);
+    const expected = JSON.stringify(object, undefined, INDENT);
     expect(result).toBe(expected);
   });
 });

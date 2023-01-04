@@ -1,11 +1,13 @@
 const {Sequelize, DataTypes, Model, Op} = require('sequelize');
-const {LoggerService} = require('../logger.service/logger.service');
-const {stringify} = require('../tools/tools');
+const {LoggerService} = require('../logger/logger.service');
+const {stringifyFormatted} = require('../tools/tools');
 const logger = new LoggerService('DatabaseRepository');
 
 class DownTimeReport extends Model {}
 
 class DatabaseRepository {
+  isInitialized = false;
+
   constructor(_pathToDatabaseFile) {
     this.pathToDbFile = _pathToDatabaseFile;
   }
@@ -33,16 +35,20 @@ class DatabaseRepository {
     });
 
     await DownTimeReport.sync({alter: true});
+    this.isInitialized = true;
     logger.debug('Database initialized');
   }
 
   async saveReport({message, result, url}) {
-    logger.debug('Saving report with params: ', stringify({message, result, url}));
+    if (!this.isInitialized) {
+      throw new Error('Database is not initialized');
+    }
+    logger.debug('Saving report with params: ', stringifyFormatted({message, result, url}));
     try {
       const row = await DownTimeReport.create({
         description: message, errorStatus: result.toString(), site: url
       });
-      logger.debug('Row added: ', stringify(row), 'with id: ', row.id);
+      logger.debug('Row added: ', stringifyFormatted(row), 'with id: ', row.id);
       return true;
     } catch (error) {
       logger.error('Error adding row: ', error.message);
@@ -52,6 +58,9 @@ class DatabaseRepository {
 
   // eslint-disable-next-line consistent-return
   async deleteOldRecords(countToKeep) {
+    if (!this.isInitialized) {
+      throw new Error('Database is not initialized');
+    }
     const total = await DownTimeReport.count();
     logger.debug('Total rows:', total);
     if (total > countToKeep) {
