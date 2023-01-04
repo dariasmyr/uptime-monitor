@@ -12,6 +12,7 @@ const {SslCertificateCheckService} = require('./ssl-checker/ssl.certificate.chec
 
 // logger.enabled = false;
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 async function main() {
 
   const sslCertificateCheckService = new SslCertificateCheckService();
@@ -55,14 +56,19 @@ async function main() {
       const siteHost = new URL(site.url).host;
       const {isAlive, time} =
         await pingService.ping(siteHost);
-      logger.debug(time > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${time} ms` : `[PING CHECK] Result for host + ${siteHost} : is dead.`);
+      logger.debug(time > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${time} ms` : `[PING CHECK] Result for host ${siteHost} : is dead.`);
       checkResultsRepository.savePing(siteHost, isAlive, time);
-      const {validTo, validFrom} =
+      try {
+        const {validTo, validFrom} =
           await sslCertificateCheckService.getCertInfo(siteHost, 5000);
-      const daysLeft =
-          await sslCertificateCheckService.getRemainingDays(siteHost, 5000);
-      logger.debug(daysLeft > 0 ? `[SSl CERT CHECK] Result for host ${siteHost} : certificate is valid. Days left: ${daysLeft} ms` : '[SSl CERT CHECK] Result for host ${siteHost} : certificate is expired.');
-      checkResultsRepository.saveSsl(siteHost, validTo, validFrom, daysLeft);
+        const daysLeft =
+            await sslCertificateCheckService.getRemainingDays(siteHost, 5000);
+        logger.debug(daysLeft > 0 ? `[SSl CERT CHECK] Result for host ${siteHost} : certificate is valid. Days left: ${daysLeft}` : '[SSl CERT CHECK] Result for host ${siteHost} : certificate is expired.');
+        checkResultsRepository.saveSsl(siteHost, validTo, validFrom, daysLeft);
+      } catch (error) {
+        logger.error(`[SSl CERT CHECK] Error for host ${siteHost} : ${error}`);
+        checkResultsRepository.saveSsl(siteHost, undefined, undefined, undefined, error);
+      }
       if (!result) {
         await databaseRepository.saveReport({
           message,
