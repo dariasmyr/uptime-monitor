@@ -20,6 +20,11 @@ class TelegramRepository {
       const pingResults = _checkResultsRepository.getPingResults();
       return context.reply(`Uptime monitor is active! \n Ping check stats: ', ${stringify(pingResults)}.`);
     });
+    this.bot.command('sslstats', (context) => {
+      console.log(context);
+      const sslResults = _checkResultsRepository.getSslResults();
+      return context.reply(`Uptime monitor is active! \n SSl Cert check stats: ', ${stringify(sslResults)}.`);
+    });
     this.bot.launch();
   }
 
