@@ -2,6 +2,7 @@ class CheckResultsRepository {
   constructor() {
     this.httpCheckResults = new Map();
     this.pingCheckResults = new Map();
+    this.sslCheckResults = new Map();
   }
 
   saveHttp(url, result, message) {
@@ -18,6 +19,14 @@ class CheckResultsRepository {
     });
   }
 
+  saveSsl(host, validTo, validFrom, daysLeft) {
+    this.sslCheckResults.set(host, {
+      validTo,
+      validFrom,
+      daysLeft
+    });
+  }
+
   getHttpResults() {
     const results = {};
     for (const [url, result] of this.httpCheckResults.entries()) {
@@ -30,6 +39,15 @@ class CheckResultsRepository {
   getPingResults() {
     const results = {};
     for (const [host, result] of this.pingCheckResults.entries()) {
+      // eslint-disable-next-line security/detect-object-injection
+      results[host] = result;
+    }
+    return results;
+  }
+
+  getSslResults() {
+    const results = {};
+    for (const [host, result] of this.sslCheckResults.entries()) {
       // eslint-disable-next-line security/detect-object-injection
       results[host] = result;
     }
