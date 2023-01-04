@@ -60,9 +60,9 @@ async function main() {
       checkResultsRepository.savePing(siteHost, isAlive, time);
       try {
         const {validTo, validFrom} =
-          await sslCertificateCheckService.getCertInfo(siteHost, 5000);
+          await sslCertificateCheckService.getCertInfo(siteHost);
         const daysLeft =
-            await sslCertificateCheckService.getRemainingDays(siteHost, 5000);
+            await sslCertificateCheckService.getRemainingDays(siteHost);
         logger.debug(daysLeft > 0 ? `[SSl CERT CHECK] Result for host ${siteHost} : certificate is valid. Days left: ${daysLeft}` : '[SSl CERT CHECK] Result for host ${siteHost} : certificate is expired.');
         checkResultsRepository.saveSsl(siteHost, validTo, validFrom, daysLeft);
       } catch (error) {

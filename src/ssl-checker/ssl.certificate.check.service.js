@@ -5,13 +5,13 @@ class SslCertificateCheckService {
   constructor() {
     this.logger = new LoggerService('SslCertificateService');
   }
-  async getCertInfo(_host, _timeout) {
+  async getCertInfo(_host) {
     const options = {
       host: _host,
       port: 443,
       servername: _host
     };
-    const timeout = _timeout;
+    const timeout = 5000;
     return new Promise((resolve, reject) => {
       const result = {};
       const socket = tls.connect(options);
@@ -35,8 +35,8 @@ class SslCertificateCheckService {
   }
 
   // calculate the remaining days of this certificate
-  async getRemainingDays(_host, _timeout) {
-    const certInfo = await this.getCertInfo(_host, _timeout);
+  async getRemainingDays(_host) {
+    const certInfo = await this.getCertInfo(_host);
     const certExpirationDate = new Date(certInfo.validTo).valueOf();
     const now = Date.now();
     if (certExpirationDate < now) {

@@ -5,7 +5,7 @@ describe('Check SSL certificate service', () => {
   const sslCertificateCheckService = new SslCertificateCheckService();
 
   test('should show SSL certificate info', async () => {
-    const certInfo = await sslCertificateCheckService.getCertInfo('gyde.one', 1000);
+    const certInfo = await sslCertificateCheckService.getCertInfo('gyde.one');
     console.log(certInfo);
     const expected = {
       validFrom: 'Dec 25 12:47:27 2022 GMT',
@@ -15,7 +15,7 @@ describe('Check SSL certificate service', () => {
   });
 
   test('should show SSL certificate days left', async () => {
-    const remainingDays = await sslCertificateCheckService.getRemainingDays('gyde.one', 1000);
+    const remainingDays = await sslCertificateCheckService.getRemainingDays('gyde.one');
     console.log(remainingDays);
     expect(remainingDays).toBeGreaterThan(0);
   });
