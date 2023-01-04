@@ -59,15 +59,13 @@ async function main() {
       logger.debug(time > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${time} ms` : `[PING CHECK] Result for host ${siteHost} : is dead.`);
       checkResultsRepository.savePing(siteHost, isAlive, time);
       try {
-        const {validTo, validFrom} =
-          await sslCertificateCheckService.getCertInfo(siteHost);
         const daysLeft =
             await sslCertificateCheckService.getRemainingDays(siteHost);
         logger.debug(daysLeft > 0 ? `[SSl CERT CHECK] Result for host ${siteHost} : certificate is valid. Days left: ${daysLeft}` : '[SSl CERT CHECK] Result for host ${siteHost} : certificate is expired.');
-        checkResultsRepository.saveSsl(siteHost, validTo, validFrom, daysLeft);
+        checkResultsRepository.saveSsl(siteHost, daysLeft);
       } catch (error) {
         logger.error(`[SSl CERT CHECK] Error for host ${siteHost} : ${error}`);
-        checkResultsRepository.saveSsl(siteHost, undefined, undefined, undefined, error);
+        checkResultsRepository.saveSsl(siteHost, error.code);
       }
       if (!result) {
         await databaseRepository.saveReport({
