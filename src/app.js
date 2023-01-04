@@ -9,15 +9,12 @@ const logger = new LoggerService('main', true);
 const {PingService} = require('./ping/ping.service');
 const {SslCertificateCheckService} = require('./ssl-checker/ssl.certificate.check.service.js');
 
-const sslCertificateCheckService = new SslCertificateCheckService();
 
-// eslint-disable-next-line unicorn/prefer-top-level-await,promise/catch-or-return
-sslCertificateCheckService.getSiteCertificate('medium.com').then(r => console.log(r));
-
+// logger.enabled = false;
 
 async function main() {
-  // logger.enabled = false;
 
+  const sslCertificateCheckService = new SslCertificateCheckService();
   const pingService = new PingService();
   const checkResultsRepository = new CheckResultsRepository();
 
@@ -60,6 +57,12 @@ async function main() {
         await pingService.ping(siteHost);
       logger.debug(time > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${time} ms` : `[PING CHECK] Result for host + ${siteHost} : is dead.`);
       checkResultsRepository.savePing(siteHost, isAlive, time);
+      const {validTo, validFrom} =
+          await sslCertificateCheckService.getCertInfo(siteHost, 5000);
+      const daysLeft =
+          await sslCertificateCheckService.getRemainingDays(siteHost, 5000);
+      logger.debug(daysLeft > 0 ? `[SSl CERT CHECK] Result for host ${siteHost} : certificate is valid. Days left: ${daysLeft} ms` : '[SSl CERT CHECK] Result for host ${siteHost} : certificate is expired.');
+      checkResultsRepository.saveSsl(siteHost, validTo, validFrom, daysLeft);
       if (!result) {
         await databaseRepository.saveReport({
           message,
@@ -78,4 +81,4 @@ async function main() {
 
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
-// main().catch(console.error);
+main().catch(console.error);
