@@ -17,6 +17,7 @@ class AvailableCheckerService {
     const checkResults =
         {
           host: siteHost,
+          checkMethods: methods,
           httpCheck: {},
           pingCheck: {},
           sslCheck: {}
@@ -34,7 +35,7 @@ class AvailableCheckerService {
 
       if (methods.includes('ping')) {
         const pingResponse = await this.pingChecker.ping(siteHost);
-        this.logger.debug(pingResponse.time > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${pingResponse.time} ms` : `[PING CHECK] Result for host ${siteHost} : is dead.`);
+        this.logger.debug(pingResponse.timeMs > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${pingResponse.timeMs} ms` : `[PING CHECK] Result for host ${siteHost} : is dead.`);
         checkResults.pingCheck = pingResponse;
       } else {
         this.logger.debug(`[PING CHECK] Ping check is disabled for host ${siteHost}`);
@@ -44,7 +45,8 @@ class AvailableCheckerService {
         try {
           const sslResponse = await this.sslChecker.getRemainingDays(siteHost);
           this.logger.debug(sslResponse > 0 ? `[SSL CHECK] Result for host ${siteHost} : is alive. Time: ${sslResponse} days` : `[SSL CHECK] Result for host ${siteHost} : is dead.`);
-          checkResults.sslCheck = sslResponse;
+          checkResults.sslCheck.isAlive = true;
+          checkResults.sslCheck.daysLeft = sslResponse;
         } catch (error) {
           this.logger.error(`[SSl CHECK] Error for host ${siteHost} : ${error.code}`);
         }

@@ -1,7 +1,6 @@
 const axios = require('axios');
 const {LoggerService} = require('../logger/logger.service');
 const {Telegraf} = require('telegraf');
-const {stringifyFormatted} = require('../tools/tools');
 const {CheckResultsFormatterService} = require('../check-results/check-results-formatter.service');
 
 class TelegramRepository {
@@ -20,11 +19,9 @@ class TelegramRepository {
   }
 
   processStatusCommand(telegrafContext) {
-    const httpResults = this.checkResultsRepository.getHttpResults();
-    const pingResults = this.checkResultsRepository.getPingResults();
-    const sslResults = this.checkResultsRepository.getSslResults();
+    const results = this.checkResultsRepository.getResults();
 
-    return telegrafContext.reply(CheckResultsFormatterService.formatResults(httpResults, pingResults, sslResults));
+    return telegrafContext.reply(CheckResultsFormatterService.formatResults(results));
   }
 
   async sendMessage(message) {

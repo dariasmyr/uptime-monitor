@@ -47,9 +47,16 @@ async function main() {
       const checkResults = await availableCheckerService.check(site.url, site.checkMethods);
       logger.debug('Check results', stringifyFormatted(checkResults));
 
-      checkResultsRepository.saveHttp(site.url, checkResults.httpCheck.isAlive, checkResults.httpCheck.message);
-      checkResultsRepository.savePing(site.url, checkResults.pingCheck.isAlive, checkResults.pingCheck.time);
-      checkResultsRepository.saveSsl(site.url, checkResults.sslDaysLeft);
+      checkResultsRepository.save(
+        site.url,
+        site.checkMethods,
+        checkResults.httpCheck.isAlive,
+        checkResults.httpCheck.message,
+        checkResults.pingCheck.isAlive,
+        checkResults.pingCheck.timeMs,
+        checkResults.sslCheck.isAlive,
+        checkResults.sslCheck.daysLeft
+      );
 
       const message = checkResults.httpCheck.message;
       const result = checkResults.httpCheck.isAlive;
