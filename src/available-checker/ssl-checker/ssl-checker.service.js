@@ -6,13 +6,13 @@ class SslCheckerService {
     this.logger = new LoggerService('SslCertificateService');
   }
 
-  getCertInfo(_host) {
+  getCertInfo(_host, _port, _timeout) {
     const options = {
       host: _host,
-      port: 443, // todo move to parameter
+      port: _port,
       servername: _host
     };
-    const timeout = 5000; // todo move to config
+    const timeout = _timeout;
     return new Promise((resolve, reject) => {
       const result = {};
       const socket = tls.connect(options);
@@ -39,15 +39,15 @@ class SslCheckerService {
     });
   }
 
-  // calculate the remaining days of this certificate
-  async getRemainingDays(_host) {
-    const certInfo = await this.getCertInfo(_host);
+  async getRemainingDays(_host, _port, _timeout) {
+    const certInfo = await this.getCertInfo(_host, _port, _timeout);
     const certExpirationDate = new Date(certInfo.validTo).valueOf();
     const now = Date.now();
     if (certExpirationDate < now) {
       this.logger.error('Certificate is expired');
       return -1;
     } else {
+      // eslint-disable-next-line no-magic-numbers
       const MIN_MS_IN_DAY = 1000 * 60 * 60 * 24;
       const remainingDays = Math.floor((certExpirationDate - now) / MIN_MS_IN_DAY);
       this.logger.debug(`Certificate is valid for ${remainingDays} days`);

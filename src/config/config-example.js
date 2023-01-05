@@ -11,6 +11,9 @@ const config = {
   },
   keepLastRecordCount: 100,
   oldRecordsDeleteIntervalMs: 10_000,
+  port: 443,
+  sslTimeoutMs: 5000,
+
   sites: [
     {
       url: 'https://site.com',

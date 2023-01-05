@@ -12,7 +12,7 @@ class AvailableCheckerService {
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity,complexity
-  async check(host, methods) {
+  async check(host, methods, port, timeout) {
     const siteHost = new URL(host).host;
     const checkResults =
         {
@@ -43,7 +43,7 @@ class AvailableCheckerService {
 
       if (methods.includes('ssl')) {
         try {
-          const sslResponse = await this.sslChecker.getRemainingDays(siteHost);
+          const sslResponse = await this.sslChecker.getRemainingDays(siteHost, port, timeout);
           this.logger.debug(sslResponse > 0 ? `[SSL CHECK] Result for host ${siteHost} : is alive. Time: ${sslResponse} days` : `[SSL CHECK] Result for host ${siteHost} : is dead.`);
           checkResults.sslCheck.isAlive = true;
           checkResults.sslCheck.daysLeft = sslResponse;
