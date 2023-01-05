@@ -1,8 +1,14 @@
 const {HttpCheckerService} = require('./http-checker.service');
 
 describe('Http checker service', () => {
+  let httpCheckerService;
+
+  beforeAll(() => {
+    httpCheckerService = new HttpCheckerService();
+  });
+
   test('should check site available via http', async () => {
-    const availableResult = await HttpCheckerService.httpCheck('https://google.com');
-    expect(availableResult.isAlive).toBeTruthy();
+    const httpResult = await httpCheckerService.httpCheck('https://google.com');
+    expect(httpResult.isAlive).toBeTruthy();
   });
 });

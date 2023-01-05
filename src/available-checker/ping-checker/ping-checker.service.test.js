@@ -1,10 +1,15 @@
 const {PingCheckerService} = require('./ping-checker.service');
 
 describe('PingService', () => {
+  let pingService;
+
+  beforeAll(() => {
+    pingService = new PingCheckerService();
+  });
+
   test('should ping-checker', async () => {
-    const pingService = new PingCheckerService();
-    const {isAlive, time} = await pingService.ping('google.com');
+    const {isAlive, timeMs} = await pingService.ping('google.com');
     expect(isAlive).toBeTruthy();
-    expect(time).toBeGreaterThan(0);
+    expect(timeMs).toBeGreaterThan(0);
   });
 });

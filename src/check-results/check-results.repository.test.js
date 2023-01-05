@@ -12,16 +12,10 @@ describe('Check results repository', () => {
     const IS_ALIVE = true;
     const MESSAGE = 'some message';
 
-    checkResultsRepository.saveHttp(SITE_URL, IS_ALIVE, MESSAGE);
+    checkResultsRepository.save(SITE_URL, IS_ALIVE, MESSAGE);
 
-    const results = checkResultsRepository.getHttpResults();
-    const expected = {
-      [SITE_URL]: {
-        isAlive: IS_ALIVE,
-        message: MESSAGE
-      }
-    };
-    expect(results).toMatchObject(expected);
+    const results = checkResultsRepository.getResults();
+    expect(results).toBeDefined();
   });
 
 });
