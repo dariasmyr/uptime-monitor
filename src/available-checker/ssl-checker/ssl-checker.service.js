@@ -1,7 +1,7 @@
 const tls = require('node:tls');
-const {LoggerService} = require('../logger/logger.service');
+const {LoggerService} = require('../../logger/logger.service');
 
-class SslCertificateCheckService {
+class SslCheckerService {
   constructor() {
     this.logger = new LoggerService('SslCertificateService');
   }
@@ -58,5 +58,5 @@ class SslCertificateCheckService {
 }
 
 module.exports = {
-  SslCertificateCheckService
+  SslCheckerService
 };
