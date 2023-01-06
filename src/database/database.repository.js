@@ -21,15 +21,23 @@ class DatabaseRepository {
     DownTimeReport.init({
       id: {
         type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true
-      }, description: {
-        type: DataTypes.TEXT, allowNull: false
-      }, errorStatus: {
-        type: DataTypes.TEXT, allowNull: false
       }, site: {
-        type: DataTypes.TEXT, allowNull: false
+        type: DataTypes.TEXT, allowNull: true
+      }, httpCheckIsAlive: {
+        type: DataTypes.TEXT, allowNull: true
+      }, httpCheckMessage: {
+        type: DataTypes.TEXT, allowNull: true
+      }, pingCheckIsAlive: {
+        type: DataTypes.TEXT, allowNull: true
+      }, pingCheckTimeMs: {
+        type: DataTypes.INTEGER, allowNull: true
+      }, sslCheckIsAlive: {
+        type: DataTypes.TEXT, allowNull: true
+      }, sslCheckDaysLeft: {
+        type: DataTypes.INTEGER, allowNull: true
       }
     }, {
-      sequelize, updatedAt: false, createdAt: true, tableName: 'down_time_reports', indexes: [{
+      sequelize, updatedAt: false, createdAt: true, tableName: 'uptime_reports', indexes: [{
         fields: ['id'], unique: true
       }]
     });
@@ -39,12 +47,32 @@ class DatabaseRepository {
     logger.debug('Database initialized');
   }
 
-  async saveReport({message, result, url}) {
+  async saveReport(
+    site,
+    httpCheckIsAlive,
+    httpCheckMessage,
+    pingCheckIsAlive,
+    pingCheckTimeMs,
+    sslCheckIsAlive,
+    sslCheckDaysLeft
+  ) {
     if (this.isInitialized) {
-      logger.debug('Saving report with params: ', stringifyFormatted({message, result, url}));
+      logger.debug('Saving report with params: ', stringifyFormatted({site,
+        httpCheckIsAlive,
+        httpCheckMessage,
+        pingCheckIsAlive,
+        pingCheckTimeMs,
+        sslCheckIsAlive,
+        sslCheckDaysLeft}));
       try {
         const row = await DownTimeReport.create({
-          description: message, errorStatus: result.toString(), site: url
+          site: site,
+          httpCheckIsAlive: httpCheckIsAlive.toString(),
+          httpCheckMessage: httpCheckMessage,
+          pingCheckIsAlive: pingCheckIsAlive.toString(),
+          pingCheckTimeMs: pingCheckTimeMs,
+          sslCheckIsAlive: sslCheckIsAlive.toString(),
+          sslCheckDaysLeft: sslCheckDaysLeft
         });
         logger.debug('Row added: ', stringifyFormatted(row), 'with id: ', row.id);
         return true;
