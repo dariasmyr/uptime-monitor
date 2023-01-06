@@ -58,21 +58,22 @@ async function main() {
         checkResults.sslCheck.daysLeft
       );
 
-      const message = checkResults.httpCheck.message;
-      const result = checkResults.httpCheck.isAlive;
+      await databaseRepository.saveReport(
+        site.url,
+        checkResults.httpCheck.isAlive,
+        checkResults.httpCheck.message,
+        checkResults.pingCheck.isAlive,
+        checkResults.pingCheck.timeMs,
+        checkResults.sslCheck.isAlive,
+        checkResults.sslCheck.daysLeft
+      );
 
       const checkResolution = await availableCheckerService.makeResolution(checkResults);
       logger.debug('Check resolution', stringifyFormatted(checkResolution));
 
-      if (!result) {
-        await databaseRepository.saveReport({
-          message,
-          result,
-          url: site.url
-        });
-
+      if (!checkResolution.isAlive) {
         await telegramRepository.sendMessage(
-          `Site ${site.url} is not available. ${message}`
+          `Site ${site.url} is down. ${checkResolution.message}`
         );
       }
     }, site.intervalMs);
