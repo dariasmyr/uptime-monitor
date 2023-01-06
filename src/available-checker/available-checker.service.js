@@ -31,6 +31,10 @@ class AvailableCheckerService {
         checkResults.httpCheck = httpResponse;
       } else {
         this.logger.debug(`[HTTP CHECK] HTTP check is disabled for host "${host}"`);
+        checkResults.httpCheck = {
+          isAlive: 'undefined',
+          message: 'HTTP check is disabled'
+        };
       }
 
       if (methods.includes('ping')) {
@@ -39,6 +43,10 @@ class AvailableCheckerService {
         checkResults.pingCheck = pingResponse;
       } else {
         this.logger.debug(`[PING CHECK] Ping check is disabled for host ${siteHost}`);
+        checkResults.pingCheck = {
+          isAlive: 'undefined',
+          message: 'Ping check is disabled'
+        };
       }
 
       if (methods.includes('ssl')) {
@@ -52,6 +60,10 @@ class AvailableCheckerService {
         }
       } else {
         this.logger.debug(`[SSL CHECK] SSL check is disabled for host ${siteHost}`);
+        checkResults.sslCheck = {
+          isAlive: 'undefined',
+          daysLeft: -1
+        };
       }
     }
     return checkResults;
@@ -79,14 +91,19 @@ class AvailableCheckerService {
     } else {
       checkResolution.message += 'SSL check is dead. ';
     }
+    // eslint-disable-next-line no-magic-numbers
     if (aliveChecks >= 2) {
       checkResolution.isAlive = true;
-      checkResolution.message = 'Site is alive. 2 of 3 checks are alive.';
+      // filter methods that are alive
+      checkResolution.checkMethods = checkResult.checkMethods.filter(method => checkResult[`${method}Check`].isAlive);
+      checkResolution.message = `Site is alive. 2 of 3 checks (${checkResolution.checkMethods}) are alive.`;
       console.log(checkResolution);
       return checkResolution;
     } else {
       checkResolution.isAlive = false;
-      checkResolution.message = 'Site is dead. 2 of 3 checks are dead.';
+      // filter methods that are dead
+      checkResolution.checkMethods = checkResult.checkMethods.filter(method => !checkResult[`${method}Check`].isAlive);
+      checkResolution.message = `Site is dead. 2 of 3 checks (${checkResolution.checkMethods}) are dead.`;
       console.log(checkResolution);
       return checkResolution;
     }
