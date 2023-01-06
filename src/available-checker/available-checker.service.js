@@ -30,7 +30,7 @@ class AvailableCheckerService {
         this.logger.debug(httpResponse.isAlive === true ? `[HTTP CHECK] Result for "${host}": is alive, message: ${httpResponse.message}` : `[HTTP CHECK] Result for "${host}": is dead, message: ${httpResponse.message}`);
         checkResults.httpCheck = httpResponse;
       } else {
-        this.logger.debug(`[HTTP CHECK] Skip http check for "${host}"`);
+        this.logger.debug(`[HTTP CHECK] HTTP check is disabled for host "${host}"`);
       }
 
       if (methods.includes('ping')) {
@@ -55,6 +55,41 @@ class AvailableCheckerService {
       }
     }
     return checkResults;
+  }
+
+  async makeResolution(checkResult) {
+    const checkResolution = {
+      host: checkResult.host,
+      isAlive: false,
+      message: ''
+    };
+    let aliveChecks = 0;
+    if (checkResult.httpCheck.isAlive) {
+      aliveChecks++;
+    } else {
+      checkResolution.message += 'HTTP check is dead. ';
+    }
+    if (checkResult.pingCheck.isAlive) {
+      aliveChecks++;
+    } else {
+      checkResolution.message += 'Ping check is dead. ';
+    }
+    if (checkResult.sslCheck.isAlive) {
+      aliveChecks++;
+    } else {
+      checkResolution.message += 'SSL check is dead. ';
+    }
+    if (aliveChecks >= 2) {
+      checkResolution.isAlive = true;
+      checkResolution.message = 'Site is alive. 2 of 3 checks are alive.';
+      console.log(checkResolution);
+      return checkResolution;
+    } else {
+      checkResolution.isAlive = false;
+      checkResolution.message = 'Site is dead. 2 of 3 checks are dead.';
+      console.log(checkResolution);
+      return checkResolution;
+    }
   }
 }
 

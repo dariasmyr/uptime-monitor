@@ -40,19 +40,20 @@ class DatabaseRepository {
   }
 
   async saveReport({message, result, url}) {
-    if (!this.isInitialized) {
+    if (this.isInitialized) {
+      logger.debug('Saving report with params: ', stringifyFormatted({message, result, url}));
+      try {
+        const row = await DownTimeReport.create({
+          description: message, errorStatus: result.toString(), site: url
+        });
+        logger.debug('Row added: ', stringifyFormatted(row), 'with id: ', row.id);
+        return true;
+      } catch (error) {
+        logger.error('Error adding row: ', error.message);
+        return false;
+      }
+    } else {
       throw new Error('Database is not initialized');
-    }
-    logger.debug('Saving report with params: ', stringifyFormatted({message, result, url}));
-    try {
-      const row = await DownTimeReport.create({
-        description: message, errorStatus: result.toString(), site: url
-      });
-      logger.debug('Row added: ', stringifyFormatted(row), 'with id: ', row.id);
-      return true;
-    } catch (error) {
-      logger.error('Error adding row: ', error.message);
-      return false;
     }
   }
 
@@ -79,6 +80,7 @@ class DatabaseRepository {
           }
         }
       });
+
 
       const recordsKept = await DownTimeReport.count();
       logger.debug('Deleted rows:', deletedRows);

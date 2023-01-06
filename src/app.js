@@ -61,6 +61,9 @@ async function main() {
       const message = checkResults.httpCheck.message;
       const result = checkResults.httpCheck.isAlive;
 
+      const checkResolution = await availableCheckerService.makeResolution(checkResults);
+      logger.debug('Check resolution', stringifyFormatted(checkResolution));
+
       if (!result) {
         await databaseRepository.saveReport({
           message,
