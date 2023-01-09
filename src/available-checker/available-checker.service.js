@@ -32,7 +32,7 @@ class AvailableCheckerService {
       } else {
         this.logger.debug(`[HTTP CHECK] HTTP check is disabled for host "${host}"`);
         checkResults.httpCheck = {
-          isAlive: 'undefined',
+          isAlive: 'disabled',
           message: 'HTTP check is disabled'
         };
       }
@@ -44,7 +44,7 @@ class AvailableCheckerService {
       } else {
         this.logger.debug(`[PING CHECK] Ping check is disabled for host ${siteHost}`);
         checkResults.pingCheck = {
-          isAlive: 'undefined',
+          isAlive: 'disabled',
           message: 'Ping check is disabled'
         };
       }
@@ -57,11 +57,15 @@ class AvailableCheckerService {
           checkResults.sslCheck.daysLeft = sslResponse;
         } catch (error) {
           this.logger.error(`[SSl CHECK] Error for host ${siteHost} : ${error.code}`);
+          checkResults.sslCheck = {
+            isAlive: 'undefined',
+            daysLeft: -1
+          };
         }
       } else {
         this.logger.debug(`[SSL CHECK] SSL check is disabled for host ${siteHost}`);
         checkResults.sslCheck = {
-          isAlive: 'undefined',
+          isAlive: 'disabled',
           daysLeft: -1
         };
       }
