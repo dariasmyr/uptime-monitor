@@ -10,11 +10,15 @@ describe('Database repository', () => {
   test('should add some records', async () => {
     const REPORTS_COUNT = 10;
     for (let index = 0; index < REPORTS_COUNT; index++) {
-      const result = await databaseRepository.saveReport({
-        url: 'https://site.com',
-        result: 'error',
-        message: 'some error'
-      });
+      const result = await databaseRepository.saveReport(
+        'https://example.com',
+        true,
+        'OK',
+        true,
+        1,
+        true,
+        100
+      );
       expect(result).toBeTruthy();
     }
   });
