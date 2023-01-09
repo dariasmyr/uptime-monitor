@@ -1,4 +1,9 @@
-const CheckResultsFormatterService = {
+const {LoggerService} = require('../logger/logger.service');
+
+class CheckResultsFormatterService {
+  constructor() {
+    this.logger = new LoggerService('CheckResultsFormatterService');
+  }
   // eslint-disable-next-line sonarjs/cognitive-complexity,complexity
   formatResults(checkResults) {
 
@@ -15,7 +20,7 @@ const CheckResultsFormatterService = {
 
     return formattedResults;
   }
-};
+}
 
 module.exports = {
   CheckResultsFormatterService
