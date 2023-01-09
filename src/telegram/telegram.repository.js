@@ -20,8 +20,8 @@ class TelegramRepository {
 
   processStatusCommand(telegrafContext) {
     const results = this.checkResultsRepository.getResults();
-
-    return telegrafContext.reply(CheckResultsFormatterService.formatResults(results));
+    const checkResultsFormatterService = new CheckResultsFormatterService();
+    return telegrafContext.reply(checkResultsFormatterService.formatResults(results));
   }
 
   async sendMessage(message) {
