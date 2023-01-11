@@ -15,8 +15,11 @@ describe('Database repository', () => {
         true,
         'OK',
         true,
+        'OK',
+        true,
         1,
         true,
+        // eslint-disable-next-line no-magic-numbers
         100
       );
       expect(result).toBeTruthy();
