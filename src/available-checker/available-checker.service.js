@@ -1,3 +1,4 @@
+const {HealthCheckerService} = require('./health-checker/health-checker.service');
 const {HttpCheckerService} = require('./http-checker/http-checker.service');
 const {PingCheckerService} = require('./ping-checker/ping-checker.service');
 const {SslCheckerService} = require('./ssl-checker/ssl-checker.service');
@@ -6,6 +7,7 @@ const {LoggerService} = require('../logger/logger.service');
 class AvailableCheckerService {
   constructor() {
     this.logger = new LoggerService('AvailableCheckerService');
+    this.healthChecker = new HealthCheckerService();
     this.httpChecker = new HttpCheckerService();
     this.pingChecker = new PingCheckerService();
     this.sslChecker = new SslCheckerService();
@@ -18,6 +20,7 @@ class AvailableCheckerService {
         {
           host: siteHost,
           checkMethods: methods,
+          healthCheck: {},
           httpCheck: {},
           pingCheck: {},
           sslCheck: {}
@@ -25,6 +28,19 @@ class AvailableCheckerService {
 
     // eslint-disable-next-line no-unused-vars
     for (const method of methods) {
+      if (methods.includes('health')) {
+        const healthResponse = await this.healthChecker.healthCheck(host);
+        this.logger.debug(healthResponse.isAlive === true ? `Host ${siteHost} is alive via health check.` : `Host ${siteHost} is dead via health check.`);
+        console.log(healthResponse);
+        checkResults.healthCheck = healthResponse;
+      } else {
+        this.logger.debug(`[HEALTH CHECK] Health check is disabled for host "${host}"`);
+        checkResults.healthCheck = {
+          isAlive: 'disabled',
+          responseBody: 'Health check is disabled'
+        };
+      }
+
       if (methods.includes('http')) {
         const httpResponse = await this.httpChecker.httpCheck(host);
         this.logger.debug(httpResponse.isAlive === true ? `[HTTP CHECK] Result for "${host}": is alive, message: ${httpResponse.message}` : `[HTTP CHECK] Result for "${host}": is dead, message: ${httpResponse.message}`);
@@ -80,6 +96,11 @@ class AvailableCheckerService {
       message: ''
     };
     let aliveChecks = 0;
+    if (checkResult.healthCheck.isAlive) {
+      aliveChecks++;
+    } else {
+      checkResolution.message += 'Health check is dead. ';
+    }
     if (checkResult.httpCheck.isAlive) {
       aliveChecks++;
     } else {
@@ -96,18 +117,18 @@ class AvailableCheckerService {
       checkResolution.message += 'SSL check is dead. ';
     }
     // eslint-disable-next-line no-magic-numbers
-    if (aliveChecks >= 2) {
+    if (aliveChecks >= 3) {
       checkResolution.isAlive = true;
       // filter methods that are alive
       checkResolution.checkMethods = checkResult.checkMethods.filter(method => checkResult[`${method}Check`].isAlive);
-      checkResolution.message = `Site is alive. 2 of 3 checks (${checkResolution.checkMethods}) are alive.`;
+      checkResolution.message = `Site is alive. 3 of 4 checks (${checkResolution.checkMethods}) are alive.`;
       console.log(checkResolution);
       return checkResolution;
     } else {
       checkResolution.isAlive = false;
       // filter methods that are dead
       checkResolution.checkMethods = checkResult.checkMethods.filter(method => !checkResult[`${method}Check`].isAlive);
-      checkResolution.message = `Site is dead. 2 of 3 checks (${checkResolution.checkMethods}) are dead.`;
+      checkResolution.message = `Site is dead. 3 of 4 checks (${checkResolution.checkMethods}) are dead.`;
       console.log(checkResolution);
       return checkResolution;
     }

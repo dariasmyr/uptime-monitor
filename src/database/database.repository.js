@@ -23,6 +23,10 @@ class DatabaseRepository {
         type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true
       }, site: {
         type: DataTypes.TEXT, allowNull: true
+      }, healthCheckIsAlive: {
+        type: DataTypes.TEXT, allowNull: true
+      }, healthCheckResponseBody: {
+        type: DataTypes.TEXT, allowNull: true
       }, httpCheckIsAlive: {
         type: DataTypes.TEXT, allowNull: true
       }, httpCheckMessage: {
@@ -49,6 +53,8 @@ class DatabaseRepository {
 
   async saveReport(
     site,
+    healthCheckIsAlive,
+    healthCheckResponseBody,
     httpCheckIsAlive,
     httpCheckMessage,
     pingCheckIsAlive,
@@ -58,6 +64,8 @@ class DatabaseRepository {
   ) {
     if (this.isInitialized) {
       logger.debug('Saving report with params: ', stringifyFormatted({site,
+        healthCheckIsAlive,
+        healthCheckResponseBody,
         httpCheckIsAlive,
         httpCheckMessage,
         pingCheckIsAlive,
@@ -67,6 +75,8 @@ class DatabaseRepository {
       try {
         const row = await DownTimeReport.create({
           site: site,
+          healthCheckIsAlive: healthCheckIsAlive.toString(),
+          healthCheckResponseBody: healthCheckResponseBody,
           httpCheckIsAlive: httpCheckIsAlive.toString(),
           httpCheckMessage: httpCheckMessage,
           pingCheckIsAlive: pingCheckIsAlive.toString(),

@@ -3,7 +3,7 @@ const {LoggerService} = require('../../logger/logger.service');
 
 class SslCheckerService {
   constructor() {
-    this.logger = new LoggerService('SslCertificateService');
+    this.logger = new LoggerService('SslService');
   }
 
   getCertInfo(_host, _port, _timeout) {

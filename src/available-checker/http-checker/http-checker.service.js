@@ -5,7 +5,7 @@ const logger = new LoggerService('HttpCheckerService');
 
 class HttpCheckerService {
   constructor() {
-    this.logger = new LoggerService('PingService');
+    this.logger = new LoggerService('HttpService');
   }
   async httpCheck(url) {
     const executionStart = Date.now();

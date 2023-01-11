@@ -50,6 +50,8 @@ async function main() {
       checkResultsRepository.save(
         site.url,
         site.checkMethods,
+        checkResults.healthCheck.isAlive,
+        checkResults.healthCheck.responseBody,
         checkResults.httpCheck.isAlive,
         checkResults.httpCheck.message,
         checkResults.pingCheck.isAlive,
@@ -60,6 +62,8 @@ async function main() {
 
       await databaseRepository.saveReport(
         site.url,
+        checkResults.healthCheck.isAlive,
+        checkResults.healthCheck.responseBody,
         checkResults.httpCheck.isAlive,
         checkResults.httpCheck.message,
         checkResults.pingCheck.isAlive,

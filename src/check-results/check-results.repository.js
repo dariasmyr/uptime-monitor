@@ -3,9 +3,13 @@ class CheckResultsRepository {
     this.CheckResults = new Map();
   }
 
-  save(host, checkMethods, httpIsAlive, httpMessage, pingIsAlive, pingTime, sslIsAlive, sslDaysLeft) {
+  save(host, checkMethods, healthIsAlive, healthResponseBody, httpIsAlive, httpMessage, pingIsAlive, pingTime, sslIsAlive, sslDaysLeft) {
     this.CheckResults.set(host, {
       checkMethods: checkMethods,
+      healthResults: {
+        isAlive: healthIsAlive,
+        responseBody: healthResponseBody
+      },
       httpResults: {
         isAlive: httpIsAlive,
         message: httpMessage
