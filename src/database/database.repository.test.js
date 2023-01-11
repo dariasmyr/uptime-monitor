@@ -1,28 +1,32 @@
 const {DatabaseRepository} = require('./database.repository');
 describe('Database repository', () => {
-  const databaseRepository = new DatabaseRepository('./data/test.db');
+  let databaseRepository;
 
   beforeAll(async () => {
+    databaseRepository = new DatabaseRepository('./data/test.db');
     await databaseRepository.init();
   });
 
   test('should add some records', async () => {
-    // eslint-disable-next-line no-magic-numbers
-    for (let index = 0; index < 5; index++) {
-      const result = await databaseRepository.saveReport({
-        url: 'https://site.com',
-        result: 'error',
-        message: 'some error'
-      });
+    const REPORTS_COUNT = 10;
+    for (let index = 0; index < REPORTS_COUNT; index++) {
+      const result = await databaseRepository.saveReport(
+        'https://example.com',
+        true,
+        'OK',
+        true,
+        1,
+        true,
+        100
+      );
       expect(result).toBeTruthy();
     }
   });
 
   test('should delete old records', async () => {
-    // eslint-disable-next-line no-magic-numbers
-    const records = await databaseRepository.deleteOldRecords(3);
-    // eslint-disable-next-line no-magic-numbers
-    expect(records).toBe(3);
+    const COUNT_TO_KEEP = 5;
+    const records = await databaseRepository.deleteOldRecords(COUNT_TO_KEEP);
+    expect(records).toBe(COUNT_TO_KEEP);
   });
 
   afterAll(async () => {

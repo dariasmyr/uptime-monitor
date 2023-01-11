@@ -1,7 +1,8 @@
-const {LoggerService} = require('../logger.service/logger.service');
 const ping = require('ping');
 
-class PingService {
+const {LoggerService} = require('../../logger/logger.service');
+
+class PingCheckerService {
   constructor() {
     this.logger = new LoggerService('PingService');
   }
@@ -9,24 +10,25 @@ class PingService {
   async ping(host) {
     const result = await ping.promise.probe(host, {
       timeout: 2,
-      extra: ['-c', '1']
+      extra: ['-c', '3']
     });
-    console.log(result);
+
     const pingResponse = {
       isAlive: result.alive,
-      time: Number.parseInt(result.avg, 10)
+      timeMs: Number.parseInt(result.avg, 10)
     };
+
     if (pingResponse.isAlive) {
-      this.logger.debug(`Host ${host} is alive. Time: ${pingResponse.time} ms`);
+      this.logger.debug(`Host ${host} is alive. Time: ${pingResponse.timeMs} ms`);
       return pingResponse;
     } else {
       this.logger.error(`Host ${host} is dead.`);
-      pingResponse.time = -1;
+      pingResponse.timeMs = -1;
       return pingResponse;
     }
   }
 }
 
 module.exports = {
-  PingService
+  PingCheckerService
 };

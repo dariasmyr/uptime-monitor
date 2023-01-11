@@ -1,31 +1,27 @@
 const axios = require('axios');
-const {LoggerService} = require('../logger.service/logger.service');
+const {LoggerService} = require('../logger/logger.service');
 const {Telegraf} = require('telegraf');
-const {stringify} = require('../tools/tools');
+const {CheckResultsFormatterService} = require('../check-results/check-results-formatter.service');
 
 class TelegramRepository {
   constructor(_checkResultsRepository, _apiKey, _chatId, _dryRun) {
+    this.logger = new LoggerService('TelegramRepository');
+
     this.apiKey = _apiKey;
     this.chatId = _chatId;
     this.dryRun = _dryRun;
-    this.logger = new LoggerService('TelegramRepository');
+    this.checkResultsRepository = _checkResultsRepository;
+
     this.bot = new Telegraf(this.apiKey);
-    this.bot.command('httpstats', (context) => {
-      console.log(context);
-      const httpResults = _checkResultsRepository.getHttpResults();
-      return context.reply(`Uptime monitor is active! \n Http check stats: ', ${stringify(httpResults)}.`);
-    });
-    this.bot.command('pingstats', (context) => {
-      console.log(context);
-      const pingResults = _checkResultsRepository.getPingResults();
-      return context.reply(`Uptime monitor is active! \n Ping check stats: ', ${stringify(pingResults)}.`);
-    });
-    this.bot.command('sslstats', (context) => {
-      console.log(context);
-      const sslResults = _checkResultsRepository.getSslResults();
-      return context.reply(`Uptime monitor is active! \n SSl Cert check stats: ', ${stringify(sslResults)}.`);
-    });
+    this.bot.command('status', this.processStatusCommand.bind(this));
+
     this.bot.launch();
+  }
+
+  processStatusCommand(telegrafContext) {
+    const results = this.checkResultsRepository.getResults();
+    const checkResultsFormatterService = new CheckResultsFormatterService();
+    return telegrafContext.reply(checkResultsFormatterService.formatResults(results));
   }
 
   async sendMessage(message) {

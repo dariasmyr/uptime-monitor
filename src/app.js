@@ -1,22 +1,15 @@
 const config = require('./config/config.js');
 const {TelegramRepository} = require('./telegram/telegram.repository');
-const {LoggerService} = require('./logger.service/logger.service');
-const {AvailableCheckerService} = require('./available-checker/available-checker.service');
+const {LoggerService} = require('./logger/logger.service');
 const {DatabaseRepository} = require('./database/database.repository');
 const {CheckResultsRepository} = require('./check-results/check-results.repository');
-const {stringify} = require('./tools/tools');
+const {stringifyFormatted} = require('./tools/tools');
+const {AvailableCheckerService} = require('./available-checker/available-checker.service');
 const logger = new LoggerService('main', true);
-const {PingService} = require('./ping/ping.service');
-const {SslCertificateCheckService} = require('./ssl-checker/ssl.certificate.check.service.js');
-
 
 // logger.enabled = false;
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 async function main() {
-
-  const sslCertificateCheckService = new SslCertificateCheckService();
-  const pingService = new PingService();
   const checkResultsRepository = new CheckResultsRepository();
 
   const telegramRepository = new TelegramRepository(
@@ -43,39 +36,48 @@ async function main() {
 
   startDeleteOldRecordsInterval();
 
-  logger.debug('Sites', stringify(config.sites));
+  logger.debug('Sites', stringifyFormatted(config.sites));
   for (const site of config.sites) {
     logger.debug(
       `Start monitoring "${site.url}" with interval ${site.intervalMs}`
     );
     setInterval(async () => {
-      const {result, message} =
-        await AvailableCheckerService.isSiteAvailableViaHttp(site.url);
-      logger.debug(`[IS SITE AVAILABLE CHECK] Result for "${site.url}": ${result}, message: ${message}`);
-      checkResultsRepository.saveHttp(site.url, result, message);
-      const siteHost = new URL(site.url).host;
-      const {isAlive, time} =
-        await pingService.ping(siteHost);
-      logger.debug(time > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${time} ms` : `[PING CHECK] Result for host ${siteHost} : is dead.`);
-      checkResultsRepository.savePing(siteHost, isAlive, time);
-      try {
-        const daysLeft =
-            await sslCertificateCheckService.getRemainingDays(siteHost);
-        logger.debug(daysLeft > 0 ? `[SSl CERT CHECK] Result for host ${siteHost} : certificate is valid. Days left: ${daysLeft}` : '[SSl CERT CHECK] Result for host ${siteHost} : certificate is expired.');
-        checkResultsRepository.saveSsl(siteHost, daysLeft);
-      } catch (error) {
-        logger.error(`[SSl CERT CHECK] Error for host ${siteHost} : ${error}`);
-        checkResultsRepository.saveSsl(siteHost, error.code);
-      }
-      if (!result) {
-        await databaseRepository.saveReport({
-          message,
-          result,
-          url: site.url
-        });
 
+      const availableCheckerService = new AvailableCheckerService();
+      const checkResults = await availableCheckerService.check(site.url, site.checkMethods, config.port, config.sslTimeoutMs);
+      logger.debug('Check results', stringifyFormatted(checkResults));
+
+      checkResultsRepository.save(
+        site.url,
+        site.checkMethods,
+        checkResults.healthCheck.isAlive,
+        checkResults.healthCheck.responseBody,
+        checkResults.httpCheck.isAlive,
+        checkResults.httpCheck.message,
+        checkResults.pingCheck.isAlive,
+        checkResults.pingCheck.timeMs,
+        checkResults.sslCheck.isAlive,
+        checkResults.sslCheck.daysLeft
+      );
+
+      await databaseRepository.saveReport(
+        site.url,
+        checkResults.healthCheck.isAlive,
+        checkResults.healthCheck.responseBody,
+        checkResults.httpCheck.isAlive,
+        checkResults.httpCheck.message,
+        checkResults.pingCheck.isAlive,
+        checkResults.pingCheck.timeMs,
+        checkResults.sslCheck.isAlive,
+        checkResults.sslCheck.daysLeft
+      );
+
+      const checkResolution = await availableCheckerService.makeResolution(checkResults);
+      logger.debug('Check resolution', stringifyFormatted(checkResolution));
+
+      if (!checkResolution.isAlive) {
         await telegramRepository.sendMessage(
-          `Site ${site.url} is not available. ${message}`
+          `Site ${site.url} is down. ${checkResolution.message}`
         );
       }
     }, site.intervalMs);

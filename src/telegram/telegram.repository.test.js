@@ -4,9 +4,8 @@ const config = require('../config/config');
 
 describe('Telegram repository', () => {
   test('should send message', async () => {
-    const checkResultsRepository = new CheckResultsRepository();
     const telegramRepository = new TelegramRepository(
-      checkResultsRepository,
+      new CheckResultsRepository(),
       config.telegram.apiKey,
       config.telegram.chatId,
       config.telegram.dryRun

@@ -1,6 +1,8 @@
 const chalk = require('chalk');
 
 class LoggerService {
+  // todo migrate logger to some good NPM library
+
   constructor(_loggerName, _showTimestamp = true) {
     if (!_loggerName) {
       throw new Error('Logger name is required');
@@ -17,7 +19,7 @@ class LoggerService {
     }
 
     if (this.showTimestamp) {
-      console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.yellowBright(...message));
+      console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.greenBright(...message));
     } else {
       console.log(this.loggerName, '|', chalk.cyan(...message));
     }

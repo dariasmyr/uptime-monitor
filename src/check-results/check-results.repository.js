@@ -1,50 +1,35 @@
 class CheckResultsRepository {
   constructor() {
-    this.httpCheckResults = new Map();
-    this.pingCheckResults = new Map();
-    this.sslCheckResults = new Map();
+    this.CheckResults = new Map();
   }
 
-  saveHttp(url, result, message) {
-    this.httpCheckResults.set(url, {
-      result,
-      message
+  save(host, checkMethods, healthIsAlive, healthResponseBody, httpIsAlive, httpMessage, pingIsAlive, pingTime, sslIsAlive, sslDaysLeft) {
+    this.CheckResults.set(host, {
+      checkMethods: checkMethods,
+      healthResults: {
+        isAlive: healthIsAlive,
+        responseBody: healthResponseBody
+      },
+      httpResults: {
+        isAlive: httpIsAlive,
+        message: httpMessage
+      },
+      pingResults: {
+        isAlive: pingIsAlive,
+        time: pingTime
+      },
+      sslResults: {
+        isAlive: sslIsAlive,
+        daysLeft: sslDaysLeft
+      }
     });
   }
 
-  savePing(host, isAlive, time) {
-    this.pingCheckResults.set(host, {
-      isAlive,
-      time
-    });
-  }
-
-  saveSsl(host, daysLeft) {
-    this.sslCheckResults.set(host, daysLeft);
-  }
-
-  getHttpResults() {
+  getResults() {
     const results = {};
-    for (const [url, result] of this.httpCheckResults.entries()) {
+    for (const [url, result] of this.CheckResults.entries()) {
       // eslint-disable-next-line security/detect-object-injection
       results[url] = result;
-    }
-    return results;
-  }
-
-  getPingResults() {
-    const results = {};
-    for (const [host, result] of this.pingCheckResults.entries()) {
-      // eslint-disable-next-line security/detect-object-injection
-      results[host] = result;
-    }
-    return results;
-  }
-
-  getSslResults() {
-    const results = {};
-    for (const [host, daysLeft] of this.sslCheckResults.entries()) {
-      results[host] = daysLeft > 0 ? `Host ${host} is active. Certificate will expire in ${daysLeft} days.` : `Certificate for host ${host} is expired or doesn't exist. Error: ${daysLeft}`;
     }
     return results;
   }

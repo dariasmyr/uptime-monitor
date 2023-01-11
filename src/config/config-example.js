@@ -11,14 +11,26 @@ const config = {
   },
   keepLastRecordCount: 100,
   oldRecordsDeleteIntervalMs: 10_000,
+  port: 443,
+  sslTimeoutMs: 5000,
+
   sites: [
     {
       url: 'https://site.com',
-      intervalMs: 6000
+      intervalMs: 6000,
+      checkMethods: [
+        'http',
+        'ping',
+        'ssl'
+      ]
     },
     {
       url: 'http://site2.com',
-      intervalMs: 3000
+      intervalMs: 3000,
+      checkMethods: [
+        'http',
+        'ping'
+      ]
     }
   ]
 };
