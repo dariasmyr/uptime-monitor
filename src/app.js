@@ -44,7 +44,7 @@ async function main() {
     setInterval(async () => {
 
       const availableCheckerService = new AvailableCheckerService();
-      const checkResults = await availableCheckerService.check(site.url, site.checkMethods, config.port, config.sslTimeoutMs);
+      const checkResults = await availableCheckerService.check(site.url, site.checkMethods, config.port, config.sslTimeoutMs, site.healthSlug, site.responseBody, site.statusCode);
       logger.debug('Check results', stringifyFormatted(checkResults));
 
       checkResultsRepository.save(

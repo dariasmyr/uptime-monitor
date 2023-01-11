@@ -22,7 +22,10 @@ const config = {
         'http',
         'ping',
         'ssl'
-      ]
+      ],
+      healthSlug: 'health',
+      responseBody: 'OK',
+      statusCode: 200
     },
     {
       url: 'http://site2.com',
@@ -30,7 +33,10 @@ const config = {
       checkMethods: [
         'http',
         'ping'
-      ]
+      ],
+      healthSlug: 'health',
+      responseBody: 'OK',
+      statusCode: 200
     }
   ]
 };

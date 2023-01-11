@@ -14,7 +14,7 @@ class AvailableCheckerService {
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity,complexity
-  async check(host, methods, port, timeout) {
+  async check(host, methods, port, timeout, healthSlug, responseBody, statusCode) {
     const siteHost = new URL(host).host;
     const checkResults =
         {
@@ -29,7 +29,7 @@ class AvailableCheckerService {
     // eslint-disable-next-line no-unused-vars
     for (const method of methods) {
       if (methods.includes('health')) {
-        const healthResponse = await this.healthChecker.healthCheck(host);
+        const healthResponse = await this.healthChecker.healthCheck(host, healthSlug, responseBody, statusCode);
         this.logger.debug(healthResponse.isAlive === true ? `Host ${siteHost} is alive via health check.` : `Host ${siteHost} is dead via health check.`);
         console.log(healthResponse);
         checkResults.healthCheck = healthResponse;
@@ -121,14 +121,14 @@ class AvailableCheckerService {
       checkResolution.isAlive = true;
       // filter methods that are alive
       checkResolution.checkMethods = checkResult.checkMethods.filter(method => checkResult[`${method}Check`].isAlive);
-      checkResolution.message = `Site is alive. 3 of 4 checks (${checkResolution.checkMethods}) are alive.`;
+      checkResolution.message = `Site is alive. Checks (${checkResolution.checkMethods}) are alive.`;
       console.log(checkResolution);
       return checkResolution;
     } else {
       checkResolution.isAlive = false;
       // filter methods that are dead
       checkResolution.checkMethods = checkResult.checkMethods.filter(method => !checkResult[`${method}Check`].isAlive);
-      checkResolution.message = `Site is dead. 3 of 4 checks (${checkResolution.checkMethods}) are dead.`;
+      checkResolution.message = `Site is dead. Checks (${checkResolution.checkMethods}) are dead.`;
       console.log(checkResolution);
       return checkResolution;
     }

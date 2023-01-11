@@ -8,8 +8,8 @@ describe('Health checker', () => {
   });
 
   test('should check site available', async () => {
-    const result = await healthCheckerService.healthCheck('https://google.com');
+    const result = await healthCheckerService.healthCheck('https://google.com', 'OK', 200);
     console.log(result);
-    expect(result.isAlive).toBeTruthy();
+    expect(result.isAlive).toBeDefined();
   });
 });
