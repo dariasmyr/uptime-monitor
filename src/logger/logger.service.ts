@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 
-class LoggerService {
+export class LoggerService {
   // todo migrate logger to some good NPM library
 
   constructor(_loggerName, _showTimestamp = true) {
@@ -37,7 +37,3 @@ class LoggerService {
     }
   }
 }
-
-module.exports = {
-  LoggerService
-};

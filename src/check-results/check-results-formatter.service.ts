@@ -1,6 +1,6 @@
-const {LoggerService} = require('../logger/logger.service');
+import {LoggerService} from '@/logger/logger.service';
 
-class CheckResultsFormatterService {
+export class CheckResultsFormatterService {
   constructor() {
     this.logger = new LoggerService('CheckResultsFormatterService');
   }
@@ -22,7 +22,3 @@ class CheckResultsFormatterService {
     return formattedResults;
   }
 }
-
-module.exports = {
-  CheckResultsFormatterService
-};

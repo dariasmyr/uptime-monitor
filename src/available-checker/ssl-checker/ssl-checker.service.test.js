@@ -1,4 +1,4 @@
-const {SslCheckerService} = require('./ssl-checker.service.js');
+const {SslCheckerService} = require('./ssl-checker.service.ts');
 
 describe('Check SSL certificate service', () => {
   let sslCheckerService;

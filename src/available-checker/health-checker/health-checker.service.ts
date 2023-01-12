@@ -1,14 +1,15 @@
 const axios = require('axios');
-const {LoggerService} = require('../../logger/logger.service');
+import {LoggerService} from '@/logger/logger.service';
 
 const logger = new LoggerService('HealthCheckerService');
 
-class HealthCheckerService {
+export class HealthCheckerService {
+  private logger: LoggerService;
   constructor() {
     this.logger = new LoggerService('HttpService');
   }
 
-  async healthCheck(url, healthSlug, responseBody, statusCode) {
+  async healthCheck(url: string, healthSlug: string, responseBody: string, statusCode: number) {
     try {
       const healthRes = await axios.get(`${url}/${healthSlug}`);
       const resultBody = healthRes.data;
@@ -26,7 +27,7 @@ class HealthCheckerService {
           responseBody: 'Not found'
         };
       }
-    } catch (error) {
+    } catch (error: any) {
       logger.error(url, 'ERR', error.message);
       return {
         isAlive: false,
@@ -35,7 +36,3 @@ class HealthCheckerService {
     }
   }
 }
-
-module.exports = {
-  HealthCheckerService
-};

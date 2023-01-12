@@ -1,13 +1,14 @@
 const axios = require('axios');
-const {LoggerService} = require('../../logger/logger.service');
+import {LoggerService} from '@/logger/logger.service';
 
 const logger = new LoggerService('HttpCheckerService');
 
-class HttpCheckerService {
+export class HttpCheckerService {
+  private logger: LoggerService;
   constructor() {
     this.logger = new LoggerService('HttpService');
   }
-  async httpCheck(url) {
+  async httpCheck(url: string) {
     const executionStart = Date.now();
     const HTTP_STATUS_OK_MIN = 200;
     const HTTP_STATUS_OK_MAX = 299;
@@ -20,7 +21,7 @@ class HttpCheckerService {
       };
       logger.debug(url, 'OK', result.message);
       return result;
-    } catch (error) {
+    } catch (error: any) {
       logger.error(url, 'ERR', error.message);
       return {
         isAlive: false,
@@ -32,10 +33,4 @@ class HttpCheckerService {
     }
   }
 }
-
-
-module.exports = {
-  HttpCheckerService
-};
-
 

@@ -2,9 +2,14 @@ const {HealthCheckerService} = require('./health-checker/health-checker.service'
 const {HttpCheckerService} = require('./http-checker/http-checker.service');
 const {PingCheckerService} = require('./ping-checker/ping-checker.service');
 const {SslCheckerService} = require('./ssl-checker/ssl-checker.service');
-const {LoggerService} = require('../logger/logger.service');
+import {LoggerService} from '@/logger/logger.service';
 
-class AvailableCheckerService {
+export class AvailableCheckerService {
+  private logger: LoggerService;
+  private healthChecker: HealthCheckerService;
+  private httpChecker: HttpCheckerService;
+  private pingChecker: PingCheckerService;
+  private sslChecker: SslCheckerService;
   constructor() {
     this.logger = new LoggerService('AvailableCheckerService');
     this.healthChecker = new HealthCheckerService();
@@ -14,7 +19,7 @@ class AvailableCheckerService {
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity,complexity
-  async check(host, methods, port, timeout, healthSlug, responseBody, statusCode) {
+  async check(host: string | URL, methods: string | string[], port: any, timeout: any, healthSlug: any, responseBody: any, statusCode: any) {
     const siteHost = new URL(host).host;
     const checkResults =
         {
@@ -134,8 +139,3 @@ class AvailableCheckerService {
     }
   }
 }
-
-
-module.exports = {
-  AvailableCheckerService
-};

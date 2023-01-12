@@ -1,9 +1,9 @@
 const axios = require('axios');
-const {LoggerService} = require('../logger/logger.service');
+import {LoggerService} from '@/logger/logger.service';
 const {Telegraf} = require('telegraf');
 const {CheckResultsFormatterService} = require('../check-results/check-results-formatter.service');
 
-class TelegramRepository {
+export class TelegramRepository {
   constructor(_checkResultsRepository, _apiKey, _chatId, _dryRun) {
     this.logger = new LoggerService('TelegramRepository');
 
@@ -47,8 +47,3 @@ class TelegramRepository {
     return false;
   }
 }
-
-
-module.exports = {
-  TelegramRepository
-};

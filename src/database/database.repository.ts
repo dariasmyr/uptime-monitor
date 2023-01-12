@@ -1,11 +1,11 @@
 const {Sequelize, DataTypes, Model, Op} = require('sequelize');
-const {LoggerService} = require('../logger/logger.service');
+import {LoggerService} from '@/logger/logger.service';
 const {stringifyFormatted} = require('../tools/tools');
 const logger = new LoggerService('DatabaseRepository');
 
 class DownTimeReport extends Model {}
 
-class DatabaseRepository {
+export class DatabaseRepository {
   isInitialized = false;
 
   constructor(_pathToDatabaseFile) {
@@ -128,9 +128,5 @@ class DatabaseRepository {
     }
   }
 }
-
-module.exports = {
-  DatabaseRepository
-};
 
 

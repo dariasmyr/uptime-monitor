@@ -1,10 +1,10 @@
-const config = require('./config/config.js');
-const {TelegramRepository} = require('./telegram/telegram.repository');
-const {LoggerService} = require('./logger/logger.service');
-const {DatabaseRepository} = require('./database/database.repository');
-const {CheckResultsRepository} = require('./check-results/check-results.repository');
-const {stringifyFormatted} = require('./tools/tools');
-const {AvailableCheckerService} = require('./available-checker/available-checker.service');
+const config = require('./config/config.ts');
+import {TelegramRepository} from './telegram/telegram.repository';
+import {LoggerService} from '@/logger/logger.service';
+import {DatabaseRepository} from './database/database.repository';
+import {CheckResultsRepository} from './check-results/check-results.repository';
+import {stringifyFormatted} from './tools/tools';
+import {AvailableCheckerService} from './available-checker/available-checker.service';
 const logger = new LoggerService('main', true);
 
 // logger.enabled = false;

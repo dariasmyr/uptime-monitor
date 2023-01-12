@@ -1,4 +1,4 @@
-class CheckResultsRepository {
+export class CheckResultsRepository {
   constructor() {
     this.CheckResults = new Map();
   }
@@ -34,7 +34,3 @@ class CheckResultsRepository {
     return results;
   }
 }
-
-module.exports = {
-  CheckResultsRepository
-};
