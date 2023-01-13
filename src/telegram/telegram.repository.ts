@@ -4,6 +4,7 @@ const {Telegraf} = require('telegraf');
 const {CheckResultsFormatterService} = require('../check-results/check-results-formatter.service');
 
 export class TelegramRepository {
+  private checkResultsRepository: any;
   constructor(_checkResultsRepository, _apiKey, _chatId, _dryRun) {
     this.logger = new LoggerService('TelegramRepository');
 
@@ -19,7 +20,7 @@ export class TelegramRepository {
   }
 
   processStatusCommand(telegrafContext) {
-    const results = this.checkResultsRepository.getResults();
+    const results: any = this.checkResultsRepository.getResults();
     const checkResultsFormatterService = new CheckResultsFormatterService();
     return telegrafContext.reply(checkResultsFormatterService.formatResults(results));
   }

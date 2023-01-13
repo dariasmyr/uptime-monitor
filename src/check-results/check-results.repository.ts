@@ -1,18 +1,19 @@
 export class CheckResultsRepository {
+  private CheckResults: Map<any, any>;
   constructor() {
     this.CheckResults = new Map();
   }
 
-  save(host, checkMethods, healthIsAlive, healthResponseBody, httpIsAlive, httpMessage, pingIsAlive, pingTime, sslIsAlive, sslDaysLeft) {
+  save(host: string, checkMethods: string[], healthIsAlive: boolean, healthBody: string, httpIsAlive: boolean, httpStatusCode: number, pingIsAlive: boolean, pingTime: number, sslIsAlive: boolean, sslRemainingDays: number) {
     this.CheckResults.set(host, {
       checkMethods: checkMethods,
       healthResults: {
         isAlive: healthIsAlive,
-        responseBody: healthResponseBody
+        body: healthBody
       },
       httpResults: {
         isAlive: httpIsAlive,
-        message: httpMessage
+        statusCode: httpStatusCode
       },
       pingResults: {
         isAlive: pingIsAlive,
@@ -20,13 +21,13 @@ export class CheckResultsRepository {
       },
       sslResults: {
         isAlive: sslIsAlive,
-        daysLeft: sslDaysLeft
+        remainingDays: sslRemainingDays
       }
     });
   }
 
   getResults() {
-    const results = {};
+    const results: any = {};
     for (const [url, result] of this.CheckResults.entries()) {
       // eslint-disable-next-line security/detect-object-injection
       results[url] = result;

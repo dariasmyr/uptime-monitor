@@ -51,25 +51,25 @@ async function main() {
         site.url,
         site.checkMethods,
         checkResults.healthCheck.isAlive,
-        checkResults.healthCheck.responseBody,
+        checkResults.healthCheck.receivedData.body,
         checkResults.httpCheck.isAlive,
-        checkResults.httpCheck.message,
+        checkResults.httpCheck.receivedData.statusCode,
         checkResults.pingCheck.isAlive,
-        checkResults.pingCheck.timeMs,
+        checkResults.pingCheck.receivedData.time,
         checkResults.sslCheck.isAlive,
-        checkResults.sslCheck.daysLeft
+        checkResults.sslCheck.receivedData.remainingDays
       );
 
       await databaseRepository.saveReport(
         site.url,
         checkResults.healthCheck.isAlive,
-        checkResults.healthCheck.responseBody,
+        checkResults.healthCheck.receivedData.body,
         checkResults.httpCheck.isAlive,
-        checkResults.httpCheck.message,
+        checkResults.httpCheck.receivedData.statusCode,
         checkResults.pingCheck.isAlive,
-        checkResults.pingCheck.timeMs,
+        checkResults.pingCheck.receivedData.time,
         checkResults.sslCheck.isAlive,
-        checkResults.sslCheck.daysLeft
+        checkResults.sslCheck.receivedData.remainingDays
       );
 
       const checkResolution = await availableCheckerService.makeResolution(checkResults);
