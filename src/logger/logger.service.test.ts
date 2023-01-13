@@ -1,4 +1,4 @@
-const {LoggerService} = require('./logger.service');
+const { LoggerService } = require('./logger.service');
 
 describe('LoggerService', () => {
   test('should create logger', () => {

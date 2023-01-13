@@ -1,3 +1,5 @@
+import {CheckResult, CheckType} from "@/available-checker/available-checker.service";
+
 const tls = require('node:tls');
 import {LoggerService} from '@/logger/logger.service';
 
@@ -46,19 +48,32 @@ export class SslCheckerService {
         });
     }
 
-    async getRemainingDays(_host: string, _port: number, _timeout: number) {
+    async getRemainingDays(_host: string, _port: number, _timeout: number):
+        Promise < CheckResult < CheckType.SSL >> {
         const certInfo = await this.getCertInfo(_host, _port, _timeout);
         const certExpirationDate = new Date(certInfo.validTo).valueOf();
         const now = Date.now();
         if (certExpirationDate < now) {
             this.logger.error('Certificate is expired');
-            return -1;
+            return {
+                isAlive: false,
+                type: CheckType.SSL,
+                receivedData: {
+                    remainingDays: -1
+                }
+            }
         } else {
             // eslint-disable-next-line no-magic-numbers
             const MIN_MS_IN_DAY = 1000 * 60 * 60 * 24;
             const remainingDays = Math.floor((certExpirationDate - now) / MIN_MS_IN_DAY);
             this.logger.debug(`Certificate is valid for ${remainingDays} days`);
-            return remainingDays;
+            return {
+                isAlive: true,
+                type: CheckType.SSL,
+                receivedData: {
+                    remainingDays: remainingDays
+                }
+            }
         }
     }
 }

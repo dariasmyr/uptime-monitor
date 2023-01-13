@@ -1,9 +1,12 @@
-const chalk = require('chalk');
+import chalk from "chalk";
 
 export class LoggerService {
   // todo migrate logger to some good NPM library
+  private readonly loggerName: string;
+  private readonly showTimestamp: boolean;
+  private readonly enabled: boolean;
 
-  constructor(_loggerName, _showTimestamp = true) {
+  constructor(_loggerName: string, _showTimestamp = true) {
     if (!_loggerName) {
       throw new Error('Logger name is required');
     }
@@ -13,8 +16,8 @@ export class LoggerService {
     this.enabled = true;
   }
 
-  debug(...message) {
-    if (this.enabled === false) {
+  debug(...message: unknown[]) {
+    if (!this.enabled) {
       return;
     }
 
@@ -25,8 +28,8 @@ export class LoggerService {
     }
   }
 
-  error(...message) {
-    if (this.enabled === false) {
+  error(...message: unknown[]) {
+    if (!this.enabled) {
       return;
     }
 

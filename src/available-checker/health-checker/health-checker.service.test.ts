@@ -9,8 +9,8 @@ describe('Health checker', () => {
 
   test('should check site available', async () => {
     // eslint-disable-next-line no-magic-numbers
-    const result = await healthCheckerService.healthCheck('https://google.com', 'health', 'OK', 200);
-    console.log(result);
-    expect(result.isAlive).toBeDefined();
+    const checkResult = await healthCheckerService.healthCheck('https://google.com', 'health', 'OK', 200);
+    console.log(checkResult);
+    expect(checkResult.isAlive).toBeDefined();
   });
 });

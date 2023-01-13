@@ -1,7 +1,7 @@
-const {SslCheckerService} = require('./ssl-checker.service.ts');
+import {SslCheckerService} from './ssl-checker.service';
 
 describe('Check SSL certificate service', () => {
-  let sslCheckerService;
+  let sslCheckerService: SslCheckerService;
 
   beforeAll(() => {
     sslCheckerService = new SslCheckerService();
