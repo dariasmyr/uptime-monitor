@@ -1,27 +1,40 @@
+interface checkResults {
+  url: string,
+  checkMethods: string[],
+  healthIsAlive: boolean,
+  healthBody: string,
+  httpIsAlive: boolean,
+  httpStatusCode: number,
+  pingIsAlive: boolean,
+  pingTime: number,
+  sslIsAlive: boolean,
+  sslRemainingDays: number
+}
+
 export class CheckResultsRepository {
   private CheckResults: Map<any, any>;
   constructor() {
     this.CheckResults = new Map();
   }
 
-  save(host: string, checkMethods: string[], healthIsAlive: boolean, healthBody: string, httpIsAlive: boolean, httpStatusCode: number, pingIsAlive: boolean, pingTime: number, sslIsAlive: boolean, sslRemainingDays: number) {
-    this.CheckResults.set(host, {
-      checkMethods: checkMethods,
+  save(data: checkResults) {
+    this.CheckResults.set(data.url, {
+      checkMethods: data.checkMethods,
       healthResults: {
-        isAlive: healthIsAlive,
-        body: healthBody
+        isAlive: data.healthIsAlive,
+        body: data.healthBody
       },
       httpResults: {
-        isAlive: httpIsAlive,
-        statusCode: httpStatusCode
+        isAlive: data.httpIsAlive,
+        statusCode: data.httpStatusCode
       },
       pingResults: {
-        isAlive: pingIsAlive,
-        time: pingTime
+        isAlive: data.pingIsAlive,
+        time: data.pingTime
       },
       sslResults: {
-        isAlive: sslIsAlive,
-        remainingDays: sslRemainingDays
+        isAlive: data.sslIsAlive,
+        remainingDays: data.sslRemainingDays
       }
     });
   }

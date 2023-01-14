@@ -1,7 +1,7 @@
-const {CheckResultsRepository} = require('./check-results.repository');
+import {CheckResultsRepository} from './check-results.repository';
 
 describe('Check results repository', () => {
-  let checkResultsRepository;
+  let checkResultsRepository: CheckResultsRepository
 
   beforeAll(async () => {
     checkResultsRepository = new CheckResultsRepository();
@@ -12,7 +12,19 @@ describe('Check results repository', () => {
     const IS_ALIVE = true;
     const MESSAGE = 'some message';
 
-    checkResultsRepository.save(SITE_URL, IS_ALIVE, MESSAGE);
+    checkResultsRepository.save(
+        {
+        url: 'https://site.com',
+        checkMethods: ['http', 'ping', 'ssl'],
+        healthIsAlive: true,
+        healthBody: ,
+        httpIsAlive: boolean,
+        httpStatusCode: number,
+        pingIsAlive: boolean,
+        pingTime: number,
+        sslIsAlive: boolean,
+        sslRemainingDays: number
+        };
 
     const results = checkResultsRepository.getResults();
     expect(results).toBeDefined();

@@ -42,6 +42,16 @@ export class CheckResults {
     sslCheck: CheckResult<CheckType.SSL>;
 }
 
+interface CheckParams {
+    host: string;
+    methods: string[];
+    port: number;
+    timeout: number;
+    healthSlug: string;
+    responseBody: string;
+    statusCode: number;
+}
+
 export class AvailableCheckerService {
     private logger: LoggerService;
     private healthChecker: HealthCheckerService;
@@ -58,21 +68,21 @@ export class AvailableCheckerService {
     }
 
     // eslint-disable-next-line sonarjs/cognitive-complexity,complexity
-    async check(host: string, methods: string[], port: number, timeout: number, healthSlug: string, responseBody: string, statusCode: number):
+    async check(data: CheckParams):
         Promise<CheckResults> {
-        const siteHost = new URL(host).host;
+        const siteHost = new URL(data.host).host;
         const checkResults = new CheckResults();
         checkResults.host = siteHost;
-        checkResults.checkMethods = methods;
+        checkResults.checkMethods = data.methods;
         // eslint-disable-next-line no-unused-vars
-        for (const method of methods) {
-            if (methods.includes('health')) {
-                const healthResponse = await this.healthChecker.healthCheck(host, healthSlug, responseBody, statusCode);
+        for (const method of data.methods) {
+            if (data.methods.includes('health')) {
+                const healthResponse = await this.healthChecker.healthCheck(data.host, data.healthSlug, data.responseBody, data.statusCode);
                 this.logger.debug(healthResponse.isAlive ? `Host ${siteHost} is alive via health check.` : `Host ${siteHost} is dead via health check.`);
                 console.log(healthResponse);
                 checkResults.healthCheck = healthResponse;
             } else {
-                this.logger.debug(`[HEALTH CHECK] Health check is disabled for host "${host}"`);
+                this.logger.debug(`[HEALTH CHECK] Health check is disabled for host "${(data.host)}"`);
                 checkResults.healthCheck = {
                     isAlive: false,
                     type: CheckType.HEALTHCHECK,
@@ -82,12 +92,12 @@ export class AvailableCheckerService {
                 }
             }
 
-            if (methods.includes('http')) {
-                const httpResponse = await this.httpChecker.httpCheck(host);
-                this.logger.debug(httpResponse.isAlive ? `[HTTP CHECK] Result for "${host}": is alive, status code: ${httpResponse.receivedData.statusCode}` : `[HTTP CHECK] Result for "${host}": is dead, status code: ${httpResponse.receivedData.statusCode}`);
+            if (data.methods.includes('http')) {
+                const httpResponse = await this.httpChecker.httpCheck(data.host);
+                this.logger.debug(httpResponse.isAlive ? `[HTTP CHECK] Result for "${(data.host)}": is alive, status code: ${httpResponse.receivedData.statusCode}` : `[HTTP CHECK] Result for "${(data.host)}": is dead, status code: ${httpResponse.receivedData.statusCode}`);
                 checkResults.httpCheck = httpResponse;
             } else {
-                this.logger.debug(`[HTTP CHECK] HTTP check is disabled for host "${host}"`);
+                this.logger.debug(`[HTTP CHECK] HTTP check is disabled for host "${(data.host)}"`);
                 checkResults.httpCheck = {
                     isAlive: false,
                     type: CheckType.HTTP,
@@ -97,7 +107,7 @@ export class AvailableCheckerService {
                 }
             }
 
-            if (methods.includes('ping')) {
+            if (data.methods.includes('ping')) {
                 const pingResponse = await this.pingChecker.ping(siteHost);
                 this.logger.debug(pingResponse.receivedData.time > 0 ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${pingResponse.receivedData.time} ms` : `[PING CHECK] Result for host ${siteHost} : is dead.`);
                 checkResults.pingCheck = pingResponse;
@@ -112,9 +122,9 @@ export class AvailableCheckerService {
                 }
             }
 
-            if (methods.includes('ssl')) {
+            if (data.methods.includes('ssl')) {
                 try {
-                    const sslResponse = await this.sslChecker.getRemainingDays(siteHost, port, timeout);
+                    const sslResponse = await this.sslChecker.getRemainingDays(siteHost, data.port, data.timeout);
                     this.logger.debug(sslResponse.receivedData.remainingDays > 0 ? `[SSL CHECK] Result for host ${siteHost} : is alive. Time: ${sslResponse.receivedData.remainingDays} days` : `[SSL CHECK] Result for host ${siteHost} : is dead.`);
                     checkResults.sslCheck = sslResponse;
                 } catch (error: any) {

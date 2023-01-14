@@ -1,11 +1,19 @@
 const axios = require('axios');
+import { CheckResultsRepository } from '@/check-results/check-results.repository';
 import {LoggerService} from '@/logger/logger.service';
+
 const {Telegraf} = require('telegraf');
 const {CheckResultsFormatterService} = require('../check-results/check-results-formatter.service');
 
 export class TelegramRepository {
   private checkResultsRepository: any;
-  constructor(_checkResultsRepository, _apiKey, _chatId, _dryRun) {
+  private logger: LoggerService;
+  private readonly apiKey: string;
+  private readonly chatId: number;
+  private readonly dryRun: boolean;
+  private bot: any;
+
+  constructor(_checkResultsRepository: CheckResultsRepository, _apiKey: string, _chatId: number, _dryRun: boolean) {
     this.logger = new LoggerService('TelegramRepository');
 
     this.apiKey = _apiKey;
@@ -19,13 +27,13 @@ export class TelegramRepository {
     this.bot.launch();
   }
 
-  processStatusCommand(telegrafContext) {
+  processStatusCommand(telegrafContext: any) {
     const results: any = this.checkResultsRepository.getResults();
     const checkResultsFormatterService = new CheckResultsFormatterService();
     return telegrafContext.reply(checkResultsFormatterService.formatResults(results));
   }
 
-  async sendMessage(message) {
+  async sendMessage(message: any) {
     if (this.dryRun) {
       this.logger.debug('[Telegram dry run message]', message);
       return true;

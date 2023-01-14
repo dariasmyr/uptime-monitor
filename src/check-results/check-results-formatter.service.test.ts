@@ -1,7 +1,7 @@
-const {CheckResultsFormatterService} = require('./check-results-formatter.service');
+import {CheckResultsFormatterService} from './check-results-formatter.service';
 
 describe('Check results formatter', () => {
-  let checkResultsFormatterService;
+  let checkResultsFormatterService: CheckResultsFormatterService;
 
   beforeAll(async () => {
     checkResultsFormatterService = new CheckResultsFormatterService();
