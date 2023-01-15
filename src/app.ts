@@ -47,18 +47,18 @@ async function main() {
       const checkResults = await availableCheckerService.check({host : site.url, methods : site.checkMethods, port : config.port, timeout : config.sslTimeoutMs, healthSlug : site.healthSlug, responseBody : site.responseBody, statusCode : site.statusCode});
       logger.debug('Check results', stringifyFormatted(checkResults));
 
-      checkResultsRepository.save(
-        site.url,
-        site.checkMethods,
-        checkResults.healthCheck.isAlive,
-        checkResults.healthCheck.receivedData.body,
-        checkResults.httpCheck.isAlive,
-        checkResults.httpCheck.receivedData.statusCode,
-        checkResults.pingCheck.isAlive,
-        checkResults.pingCheck.receivedData.time,
-        checkResults.sslCheck.isAlive,
-        checkResults.sslCheck.receivedData.remainingDays
-      );
+      checkResultsRepository.save({
+        url: site.url,
+        checkMethods: site.checkMethods,
+        healthIsAlive: checkResults.healthCheck.isAlive,
+        healthBody: checkResults.healthCheck.receivedData.body,
+        httpIsAlive: checkResults.httpCheck.isAlive,
+        httpStatusCode: checkResults.httpCheck.receivedData.statusCode,
+        pingIsAlive: checkResults.pingCheck.isAlive,
+        pingTime: checkResults.pingCheck.receivedData.time,
+        sslIsAlive: checkResults.sslCheck.isAlive,
+        sslRemainingDays: checkResults.sslCheck.receivedData.remainingDays
+      });
 
       await databaseRepository.saveReport(
         site.url,

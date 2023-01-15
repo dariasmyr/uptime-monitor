@@ -8,23 +8,20 @@ describe('Check results repository', () => {
   });
 
   test('should save result as json', () => {
-    const SITE_URL = 'https://site.com';
-    const IS_ALIVE = true;
-    const MESSAGE = 'some message';
 
     checkResultsRepository.save(
         {
         url: 'https://site.com',
         checkMethods: ['http', 'ping', 'ssl'],
         healthIsAlive: true,
-        healthBody: ,
-        httpIsAlive: boolean,
-        httpStatusCode: number,
-        pingIsAlive: boolean,
-        pingTime: number,
-        sslIsAlive: boolean,
-        sslRemainingDays: number
-        };
+        healthBody: 'OK',
+        httpIsAlive: true,
+        httpStatusCode: 200,
+        pingIsAlive: true,
+        pingTime: 1,
+        sslIsAlive: true,
+        sslRemainingDays: 100
+        });
 
     const results = checkResultsRepository.getResults();
     expect(results).toBeDefined();

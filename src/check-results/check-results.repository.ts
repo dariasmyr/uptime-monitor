@@ -1,4 +1,4 @@
-interface checkResults {
+interface checkResultsRaw {
   url: string,
   checkMethods: string[],
   healthIsAlive: boolean,
@@ -12,12 +12,12 @@ interface checkResults {
 }
 
 export class CheckResultsRepository {
-  private CheckResults: Map<any, any>;
+  CheckResults: Map<string, any>;
   constructor() {
     this.CheckResults = new Map();
   }
 
-  save(data: checkResults) {
+  save(data: checkResultsRaw) {
     this.CheckResults.set(data.url, {
       checkMethods: data.checkMethods,
       healthResults: {

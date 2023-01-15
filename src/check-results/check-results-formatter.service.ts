@@ -6,7 +6,7 @@ export class CheckResultsFormatterService {
     this.logger = new LoggerService('CheckResultsFormatterService');
   }
   // eslint-disable-next-line sonarjs/cognitive-complexity,complexity
-  formatResults(checkResults: any): any {
+  formatResults(checkResults: Map<string, any>): string {
     let formattedResults: string = '';
     for (const [url, result] of Object.entries(checkResults)) {
       formattedResults += '\n-------\n';

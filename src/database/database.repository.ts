@@ -1,14 +1,17 @@
-const {Sequelize, DataTypes, Model, Op} = require('sequelize');
+import {Sequelize, DataTypes, Model, Op} from 'sequelize';
 import {LoggerService} from '@/logger/logger.service';
-const {stringifyFormatted} = require('../tools/tools');
+import {stringifyFormatted} from '@/tools/tools';
 const logger = new LoggerService('DatabaseRepository');
 
-class DownTimeReport extends Model {}
+class DownTimeReport extends Model {
+  id: number;
+}
 
 export class DatabaseRepository {
   isInitialized = false;
+  private readonly pathToDbFile: string;
 
-  constructor(_pathToDatabaseFile) {
+  constructor(_pathToDatabaseFile: string) {
     this.pathToDbFile = _pathToDatabaseFile;
   }
 
@@ -25,12 +28,12 @@ export class DatabaseRepository {
         type: DataTypes.TEXT, allowNull: true
       }, healthCheckIsAlive: {
         type: DataTypes.TEXT, allowNull: true
-      }, healthCheckResponseBody: {
+      }, healthCheckBody: {
         type: DataTypes.TEXT, allowNull: true
       }, httpCheckIsAlive: {
         type: DataTypes.TEXT, allowNull: true
-      }, httpCheckMessage: {
-        type: DataTypes.TEXT, allowNull: true
+      }, httpCheckStatusCode: {
+        type: DataTypes.NUMBER, allowNull: true
       }, pingCheckIsAlive: {
         type: DataTypes.TEXT, allowNull: true
       }, pingCheckTimeMs: {
@@ -52,22 +55,22 @@ export class DatabaseRepository {
   }
 
   async saveReport(
-    site,
-    healthCheckIsAlive,
-    healthCheckResponseBody,
-    httpCheckIsAlive,
-    httpCheckMessage,
-    pingCheckIsAlive,
-    pingCheckTimeMs,
-    sslCheckIsAlive,
-    sslCheckDaysLeft
+    site: string,
+    healthCheckIsAlive: boolean,
+    healthCheckBody: string,
+    httpCheckIsAlive: boolean,
+    httpCheckStatusCode: number,
+    pingCheckIsAlive: boolean,
+    pingCheckTimeMs: number,
+    sslCheckIsAlive: boolean,
+    sslCheckDaysLeft: number
   ) {
     if (this.isInitialized) {
       logger.debug('Saving report with params: ', stringifyFormatted({site,
         healthCheckIsAlive,
-        healthCheckResponseBody,
+        healthCheckBody,
         httpCheckIsAlive,
-        httpCheckMessage,
+        httpCheckStatusCode,
         pingCheckIsAlive,
         pingCheckTimeMs,
         sslCheckIsAlive,
@@ -76,9 +79,9 @@ export class DatabaseRepository {
         const row = await DownTimeReport.create({
           site: site,
           healthCheckIsAlive: healthCheckIsAlive.toString(),
-          healthCheckResponseBody: healthCheckResponseBody,
+          healthCheckBody: healthCheckBody,
           httpCheckIsAlive: httpCheckIsAlive.toString(),
-          httpCheckMessage: httpCheckMessage,
+          httpCheckStatusCode: httpCheckStatusCode,
           pingCheckIsAlive: pingCheckIsAlive.toString(),
           pingCheckTimeMs: pingCheckTimeMs,
           sslCheckIsAlive: sslCheckIsAlive.toString(),
@@ -86,7 +89,7 @@ export class DatabaseRepository {
         });
         logger.debug('Row added: ', stringifyFormatted(row), 'with id: ', row.id);
         return true;
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Error adding row: ', error.message);
         return false;
       }
@@ -96,7 +99,7 @@ export class DatabaseRepository {
   }
 
   // eslint-disable-next-line consistent-return
-  async deleteOldRecords(countToKeep) {
+  async deleteOldRecords(countToKeep: any): Promise<number | undefined> {
     if (!this.isInitialized) {
       throw new Error('Database is not initialized');
     }
@@ -119,12 +122,12 @@ export class DatabaseRepository {
         }
       });
 
-
       const recordsKept = await DownTimeReport.count();
       logger.debug('Deleted rows:', deletedRows);
       return recordsKept;
     } else {
       console.log('No rows deleted');
+      return undefined;
     }
   }
 }
