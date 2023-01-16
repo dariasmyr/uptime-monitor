@@ -1,6 +1,6 @@
-const {DatabaseRepository} = require('./database.repository');
+import {DatabaseRepository} from './database.repository';
 describe('Database repository', () => {
-  let databaseRepository;
+  let databaseRepository: any;
 
   beforeAll(async () => {
     databaseRepository = new DatabaseRepository('./data/test.db');

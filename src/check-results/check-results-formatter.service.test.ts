@@ -8,7 +8,7 @@ describe('Check results formatter', () => {
   });
 
   test('should format results', () => {
-    const results =
+    const results: any =
         {'https://site.com': {
           checkMethods: [
             'http',
