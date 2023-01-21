@@ -1,8 +1,7 @@
-import {CheckResult, CheckType} from "@/available-checker/available-checker.service";
+import {CheckResult, CheckType} from "../available-checker.service";
+import {LoggerService} from '../../logger/logger.service';
 
-const ping = require('ping');
-
-import {LoggerService} from '@/logger/logger.service';
+import ping from "ping";
 
 export class PingCheckerService {
   private logger: LoggerService;

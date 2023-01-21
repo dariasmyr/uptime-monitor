@@ -1,6 +1,6 @@
-const {TelegramRepository} = require('./telegram.repository');
-const {CheckResultsRepository} = require('../check-results/check-results.repository');
-const config = require('../config/config');
+import {TelegramRepository} from './telegram.repository';
+import {CheckResultsRepository} from '../check-results/check-results.repository';
+import {config} from '../config/config';
 
 describe('Telegram repository', () => {
   test('should send message', async () => {

@@ -1,7 +1,7 @@
-import {CheckResult, CheckType} from "@/available-checker/available-checker.service";
+import {CheckResult, CheckType} from "../available-checker.service";
+import {LoggerService} from '../../logger/logger.service';
 
-const tls = require('node:tls');
-import {LoggerService} from '@/logger/logger.service';
+import tls from "node:tls";
 
 class SSLCertificateInfo {
     validFrom: string;

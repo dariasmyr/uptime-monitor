@@ -1,6 +1,6 @@
 import {Sequelize, DataTypes, Model, Op} from 'sequelize';
-import {LoggerService} from '@/logger/logger.service';
-import {stringifyFormatted} from '@/tools/tools';
+import {LoggerService} from '../logger/logger.service';
+import {stringifyFormatted} from '../tools/tools';
 const logger = new LoggerService('DatabaseRepository');
 
 class DownTimeReport extends Model {

@@ -1,5 +1,3 @@
-import chalk from "chalk";
-
 export class LoggerService {
   // todo migrate logger to some good NPM library
   private readonly loggerName: string;
@@ -22,9 +20,9 @@ export class LoggerService {
     }
 
     if (this.showTimestamp) {
-      console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.greenBright(...message));
+      console.log(new Date().toISOString(), '|', this.loggerName, '|', ...message);
     } else {
-      console.log(this.loggerName, '|', chalk.cyan(...message));
+      console.log(this.loggerName, '|', ...message);
     }
   }
 
@@ -34,9 +32,9 @@ export class LoggerService {
     }
 
     if (this.showTimestamp) {
-      console.log(chalk.grey(new Date().toISOString()), '|', this.loggerName, '|', chalk.red.bold(...message));
+      console.log(new Date().toISOString(), '|', this.loggerName, '|');
     } else {
-      console.log(this.loggerName, '|', chalk.red.bold(...message));
+      console.log(this.loggerName, '|', ...message);
     }
   }
 }

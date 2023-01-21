@@ -2,7 +2,7 @@ import {HealthCheckerService} from './health-checker/health-checker.service';
 import {HttpCheckerService} from './http-checker/http-checker.service';
 import {PingCheckerService} from './ping-checker/ping-checker.service';
 import {SslCheckerService} from './ssl-checker/ssl-checker.service';
-import {LoggerService} from '@/logger/logger.service';
+import {LoggerService} from '../logger/logger.service';
 
 export enum CheckType {
     PING = 'PING',

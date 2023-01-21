@@ -1,4 +1,4 @@
-import {LoggerService} from '@/logger/logger.service';
+import {LoggerService} from '../logger/logger.service';
 
 export class CheckResultsFormatterService {
   private logger: LoggerService;

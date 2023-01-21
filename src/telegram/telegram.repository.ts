@@ -1,19 +1,19 @@
-const axios = require('axios');
-import { CheckResultsRepository } from '@/check-results/check-results.repository';
-import {LoggerService} from '@/logger/logger.service';
+import axios from 'axios';
+import { CheckResultsRepository } from '../check-results/check-results.repository';
 
-const {Telegraf} = require('telegraf');
-const {CheckResultsFormatterService} = require('../check-results/check-results-formatter.service');
+import {Telegraf} from 'telegraf';
+import {CheckResultsFormatterService} from "../check-results/check-results-formatter.service";
+import {LoggerService} from "../logger/logger.service";
 
 export class TelegramRepository {
   private checkResultsRepository: any;
   private logger: LoggerService;
   private readonly apiKey: string;
-  private readonly chatId: number;
+  private readonly chatId: string;
   private readonly dryRun: boolean;
   private bot: any;
 
-  constructor(_checkResultsRepository: CheckResultsRepository, _apiKey: string, _chatId: number, _dryRun: boolean) {
+  constructor(_checkResultsRepository: CheckResultsRepository, _apiKey: string, _chatId: string, _dryRun: boolean) {
     this.logger = new LoggerService('TelegramRepository');
 
     this.apiKey = _apiKey;

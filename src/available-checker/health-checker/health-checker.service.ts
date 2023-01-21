@@ -1,7 +1,7 @@
-import {CheckType, CheckResult} from "@/available-checker/available-checker.service";
+import {CheckType, CheckResult} from "../available-checker.service";
+import {LoggerService} from '../../logger/logger.service';
 
-const axios = require('axios');
-import {LoggerService} from '@/logger/logger.service';
+import axios from "axios";
 
 const logger = new LoggerService('HealthCheckerService');
 
