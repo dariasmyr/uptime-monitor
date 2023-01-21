@@ -31,7 +31,7 @@ export class HttpCheckerService {
         isAlive: false,
         type: CheckType.HTTP,
         receivedData: {
-            statusCode: error.response.status
+            statusCode: error.code
         }
       }
     } finally {
