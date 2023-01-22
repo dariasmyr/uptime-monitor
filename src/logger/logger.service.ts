@@ -32,9 +32,9 @@ export class LoggerService {
     }
 
     if (this.showTimestamp) {
-      console.error('\x1b[33m ', new Date().toISOString(), '|', this.loggerName, '|', ...message, '\x1b[0m\'');
+      console.log('\x1b[33m ', new Date().toISOString(), '|', this.loggerName, '|', ...message, '\x1b[0m\'');
     } else {
-      console.error('\x1b[33m ', this.loggerName, '|', ...message, '\x1b[0m\'');
+      console.log('\x1b[33m ', this.loggerName, '|', ...message, '\x1b[0m\'');
     }
   }
 }

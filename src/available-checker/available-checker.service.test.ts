@@ -10,13 +10,18 @@ describe('Available checker service', () => {
     test('should check site available', async () => {
         // eslint-disable-next-line no-magic-numbers
         const result = await availableCheckerService.check({
-            host: 'google.com',
-            methods: ['ping', 'ssl'],
+            host: 'https://www.google.com/',
+            methods: [
+                'health',
+                'http',
+                'ping',
+                'ssl'
+            ],
             port: 443,
-            timeout: 10000,
+            timeout: 5000,
             healthSlug: 'health',
             responseBody: 'OK',
-            statusCode: 200,
+            statusCode: 200
         });
         console.log(result);
         expect(result).toBeDefined();

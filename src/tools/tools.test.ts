@@ -1,4 +1,4 @@
-const {stringifyFormatted} = require('./tools');
+import {stringifyFormatted} from './tools';
 
 describe('Tools', () => {
   test('should stringify object', () => {

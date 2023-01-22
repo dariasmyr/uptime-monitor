@@ -1,4 +1,4 @@
-const { LoggerService } = require('./logger.service');
+import {LoggerService} from './logger.service';
 
 describe('LoggerService', () => {
   test('should create logger', () => {
