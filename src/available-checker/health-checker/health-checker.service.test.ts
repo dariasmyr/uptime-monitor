@@ -1,4 +1,4 @@
-import {HealthCheckerService} from './health-checker.service';
+import { HealthCheckerService } from './health-checker.service';
 
 describe('Health checker', () => {
   let healthCheckerService: HealthCheckerService;
@@ -9,7 +9,13 @@ describe('Health checker', () => {
 
   test('should check site available', async () => {
     // eslint-disable-next-line no-magic-numbers
-    const checkResult = await healthCheckerService.healthCheck('https://google.com', 'health', 'OK', 200);
+    const checkResult = await healthCheckerService.healthCheck(
+      'https://google.com',
+      'health',
+      'OK',
+      // eslint-disable-next-line no-magic-numbers
+      200,
+    );
     console.log(checkResult);
     expect(checkResult.isAlive).toBeDefined();
   });

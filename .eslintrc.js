@@ -17,7 +17,6 @@ module.exports = {
     'simple-import-sort',
   ],
   extends: [
-    'plugin:@typescript-eslint/recommended',
     'plugin:sonarjs/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:security/recommended',
@@ -36,7 +35,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js', 'src/@generated/'],
+  ignorePatterns: ['.eslintrc.js', 'dist'],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -74,7 +73,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['error'],
     'dot-notation': 'off', // TODO: enable
     'no-use-before-define': 'off',
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error",
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
   },
 };

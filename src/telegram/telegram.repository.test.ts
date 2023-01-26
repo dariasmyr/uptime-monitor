@@ -1,6 +1,6 @@
-import {TelegramRepository} from './telegram.repository';
-import {CheckResultsRepository} from '../check-results/check-results.repository';
-import {config} from '../config/config';
+import { CheckResultsRepository } from '../check-results/check-results.repository';
+import { config } from '../config/config';
+import { TelegramRepository } from './telegram.repository';
 
 describe('Telegram repository', () => {
   test('should send message', async () => {
@@ -8,7 +8,7 @@ describe('Telegram repository', () => {
       new CheckResultsRepository(),
       config.telegram.apiKey,
       config.telegram.chatId,
-      config.telegram.dryRun
+      config.telegram.dryRun,
     );
     const result = await telegramRepository.sendMessage('Test message');
     expect(result).toBeTruthy();

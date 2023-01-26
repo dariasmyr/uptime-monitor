@@ -20,9 +20,17 @@ export class LoggerService {
     }
 
     if (this.showTimestamp) {
-      console.log('\x1b[32m ', new Date().toISOString(), '|', this.loggerName, '|', ...message, '\x1b[0m\'');
+      console.log(
+        '\u001B[32m',
+        new Date().toISOString(),
+        '|',
+        this.loggerName,
+        '|',
+        ...message,
+        '\u001B[0m',
+      );
     } else {
-      console.log('\x1b[32m ', this.loggerName, '|', ...message, '\x1b[0m\'');
+      console.log('\u001B[32m', this.loggerName, '|', ...message, '\u001B[0m');
     }
   }
 
@@ -32,9 +40,17 @@ export class LoggerService {
     }
 
     if (this.showTimestamp) {
-      console.log('\x1b[33m ', new Date().toISOString(), '|', this.loggerName, '|', ...message, '\x1b[0m\'');
+      console.log(
+        '\u001B[33m',
+        new Date().toISOString(),
+        '|',
+        this.loggerName,
+        '|',
+        ...message,
+        '\u001B[0m',
+      );
     } else {
-      console.log('\x1b[33m ', this.loggerName, '|', ...message, '\x1b[0m\'');
+      console.log('\u001B[33m', this.loggerName, '|', ...message, '\u001B[0m');
     }
   }
 }

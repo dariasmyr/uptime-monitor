@@ -1,6 +1,7 @@
-/.idea
-/node_modules/
-/data/
-/src/config/config.ts
+.eslintrc.js
+node_modules/
+dist/
+.idea/
+data
+/src/config/
 /coverage/
-/dist/

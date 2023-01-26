@@ -1,4 +1,4 @@
-import {PingCheckerService} from './ping-checker.service';
+import { PingCheckerService } from './ping-checker.service';
 
 describe('PingService', () => {
   let pingService: PingCheckerService;
@@ -8,7 +8,7 @@ describe('PingService', () => {
   });
 
   test('should ping-checker', async () => {
-    const {isAlive, receivedData} = await pingService.ping('google.com');
+    const { isAlive, receivedData } = await pingService.ping('google.com');
     expect(isAlive).toBeTruthy();
     expect(receivedData.time).toBeGreaterThan(0);
   });

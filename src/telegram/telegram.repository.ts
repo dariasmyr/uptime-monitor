@@ -1,9 +1,11 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
-import { CheckResultsRepository } from '../check-results/check-results.repository';
+import { Telegraf } from 'telegraf';
 
-import {Telegraf} from 'telegraf';
-import {CheckResultsFormatterService} from "../check-results/check-results-formatter.service";
-import {LoggerService} from "../logger/logger.service";
+import { CheckResultsRepository } from '../check-results/check-results.repository';
+import { CheckResultsFormatterService } from '../check-results/check-results-formatter.service';
+import { LoggerService } from '../logger/logger.service';
 
 export class TelegramRepository {
   private checkResultsRepository: any;
@@ -13,7 +15,12 @@ export class TelegramRepository {
   private readonly dryRun: boolean;
   private bot: any;
 
-  constructor(_checkResultsRepository: CheckResultsRepository, _apiKey: string, _chatId: string, _dryRun: boolean) {
+  constructor(
+    _checkResultsRepository: CheckResultsRepository,
+    _apiKey: string,
+    _chatId: string,
+    _dryRun: boolean,
+  ) {
     this.logger = new LoggerService('TelegramRepository');
 
     this.apiKey = _apiKey;
@@ -30,7 +37,9 @@ export class TelegramRepository {
   processStatusCommand(telegrafContext: any) {
     const results: any = this.checkResultsRepository.getResults();
     const checkResultsFormatterService = new CheckResultsFormatterService();
-    return telegrafContext.reply(checkResultsFormatterService.formatResults(results));
+    return telegrafContext.reply(
+      checkResultsFormatterService.formatResults(results),
+    );
   }
 
   async sendMessage(message: any) {

@@ -1,4 +1,6 @@
-import {DatabaseRepository} from './database.repository';
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { DatabaseRepository } from './database.repository';
 describe('Database repository', () => {
   let databaseRepository: any;
 
@@ -20,7 +22,7 @@ describe('Database repository', () => {
         1,
         true,
         // eslint-disable-next-line no-magic-numbers
-        100
+        100,
       );
       expect(result).toBeTruthy();
     }

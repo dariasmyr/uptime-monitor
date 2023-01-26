@@ -1,7 +1,7 @@
-import {CheckResult, CheckType} from "../available-checker.service";
-import {LoggerService} from '../../logger/logger.service';
+import ping from 'ping';
 
-import ping from "ping";
+import { LoggerService } from '../../logger/logger.service';
+import { CheckResult, CheckType } from '../available-checker.service';
 
 export class PingCheckerService {
   private logger: LoggerService;
@@ -9,26 +9,28 @@ export class PingCheckerService {
     this.logger = new LoggerService('PingService');
   }
 
-  async ping(host: string): Promise < CheckResult < CheckType.PING >>  {
+  async ping(host: string): Promise<CheckResult<CheckType.PING>> {
     const result = await ping.promise.probe(host, {
       timeout: 2,
-      extra: ['-c', '3']
+      extra: ['-c', '3'],
     });
 
     const pingResponse = {
       isAlive: result.alive,
-      timeMs: Number.parseInt(result.avg, 10)
+      timeMs: Number.parseInt(result.avg, 10),
     };
 
     if (pingResponse.isAlive) {
-      this.logger.debug(`Host ${host} is alive. Time: ${pingResponse.timeMs} ms`);
+      this.logger.debug(
+        `Host ${host} is alive. Time: ${pingResponse.timeMs} ms`,
+      );
       return {
         isAlive: true,
         type: CheckType.PING,
         receivedData: {
-            time: pingResponse.timeMs
-        }
-      }
+          time: pingResponse.timeMs,
+        },
+      };
     } else {
       this.logger.error(`Host ${host} is dead.`);
       pingResponse.timeMs = -1;
@@ -36,10 +38,9 @@ export class PingCheckerService {
         isAlive: false,
         type: CheckType.PING,
         receivedData: {
-            time: pingResponse.timeMs
-        }
-      }
+          time: pingResponse.timeMs,
+        },
+      };
     }
   }
 }
-

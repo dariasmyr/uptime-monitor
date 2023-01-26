@@ -1,4 +1,4 @@
-import {HttpCheckerService} from './http-checker.service';
+import { HttpCheckerService } from './http-checker.service';
 
 describe('Http checker service', () => {
   let httpCheckerService: HttpCheckerService;

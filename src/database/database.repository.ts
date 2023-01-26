@@ -1,6 +1,9 @@
-import {Sequelize, DataTypes, Model, Op} from 'sequelize';
-import {LoggerService} from '../logger/logger.service';
-import {stringifyFormatted} from '../tools/tools';
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { DataTypes, Model, Op, Sequelize } from 'sequelize';
+
+import { LoggerService } from '../logger/logger.service';
+import { stringifyFormatted } from '../tools/tools';
 const logger = new LoggerService('DatabaseRepository');
 
 class DownTimeReport extends Model {
@@ -17,39 +20,70 @@ export class DatabaseRepository {
 
   async init() {
     const sequelize = new Sequelize({
-      dialect: 'sqlite', storage: this.pathToDbFile
+      dialect: 'sqlite',
+      storage: this.pathToDbFile,
       // logging: (...msg) => console.log(...msg)
     });
 
-    DownTimeReport.init({
-      id: {
-        type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true
-      }, site: {
-        type: DataTypes.TEXT, allowNull: true
-      }, healthCheckIsAlive: {
-        type: DataTypes.TEXT, allowNull: true
-      }, healthCheckBody: {
-        type: DataTypes.TEXT, allowNull: true
-      }, httpCheckIsAlive: {
-        type: DataTypes.TEXT, allowNull: true
-      }, httpCheckStatusCode: {
-        type: DataTypes.NUMBER, allowNull: true
-      }, pingCheckIsAlive: {
-        type: DataTypes.TEXT, allowNull: true
-      }, pingCheckTimeMs: {
-        type: DataTypes.INTEGER, allowNull: true
-      }, sslCheckIsAlive: {
-        type: DataTypes.TEXT, allowNull: true
-      }, sslCheckDaysLeft: {
-        type: DataTypes.INTEGER, allowNull: true
-      }
-    }, {
-      sequelize, updatedAt: false, createdAt: true, tableName: 'uptime_reports', indexes: [{
-        fields: ['id'], unique: true
-      }]
-    });
+    DownTimeReport.init(
+      {
+        id: {
+          type: DataTypes.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        site: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        healthCheckIsAlive: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        healthCheckBody: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        httpCheckIsAlive: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        httpCheckStatusCode: {
+          type: DataTypes.NUMBER,
+          allowNull: true,
+        },
+        pingCheckIsAlive: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        pingCheckTimeMs: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+        },
+        sslCheckIsAlive: {
+          type: DataTypes.TEXT,
+          allowNull: true,
+        },
+        sslCheckDaysLeft: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+        },
+      },
+      {
+        sequelize,
+        updatedAt: false,
+        createdAt: true,
+        tableName: 'uptime_reports',
+        indexes: [
+          {
+            fields: ['id'],
+            unique: true,
+          },
+        ],
+      },
+    );
 
-    await DownTimeReport.sync({alter: true});
+    await DownTimeReport.sync({ alter: true });
     this.isInitialized = true;
     logger.debug('Database initialized');
   }
@@ -63,18 +97,23 @@ export class DatabaseRepository {
     pingCheckIsAlive: boolean,
     pingCheckTimeMs: number,
     sslCheckIsAlive: boolean,
-    sslCheckDaysLeft: number
+    sslCheckDaysLeft: number,
   ) {
     if (this.isInitialized) {
-      logger.debug('Saving report with params: ', stringifyFormatted({site,
-        healthCheckIsAlive,
-        healthCheckBody,
-        httpCheckIsAlive,
-        httpCheckStatusCode,
-        pingCheckIsAlive,
-        pingCheckTimeMs,
-        sslCheckIsAlive,
-        sslCheckDaysLeft}));
+      logger.debug(
+        'Saving report with params: ',
+        stringifyFormatted({
+          site,
+          healthCheckIsAlive,
+          healthCheckBody,
+          httpCheckIsAlive,
+          httpCheckStatusCode,
+          pingCheckIsAlive,
+          pingCheckTimeMs,
+          sslCheckIsAlive,
+          sslCheckDaysLeft,
+        }),
+      );
       try {
         const row = await DownTimeReport.create({
           site: site,
@@ -85,9 +124,14 @@ export class DatabaseRepository {
           pingCheckIsAlive: pingCheckIsAlive.toString(),
           pingCheckTimeMs: pingCheckTimeMs,
           sslCheckIsAlive: sslCheckIsAlive.toString(),
-          sslCheckDaysLeft: sslCheckDaysLeft
+          sslCheckDaysLeft: sslCheckDaysLeft,
         });
-        logger.debug('Row added: ', stringifyFormatted(row), 'with id: ', row.id);
+        logger.debug(
+          'Row added: ',
+          stringifyFormatted(row),
+          'with id: ',
+          row.id,
+        );
         return true;
       } catch (error: any) {
         logger.error('Error adding row: ', error.message);
@@ -108,18 +152,19 @@ export class DatabaseRepository {
     if (total > countToKeep) {
       // Find latest countToKeep rows, and delete all others rows
       const rowsToDelete = await DownTimeReport.findAll({
-        order: [['id', 'DESC']], offset: countToKeep
+        order: [['id', 'DESC']],
+        offset: countToKeep,
       });
 
-      const idsToDelete = rowsToDelete.map(row => row.id);
+      const idsToDelete = rowsToDelete.map((row) => row.id);
       logger.debug('Deleting rows with ids:', idsToDelete);
 
       const deletedRows = await DownTimeReport.destroy({
         where: {
           id: {
-            [Op.in]: idsToDelete
-          }
-        }
+            [Op.in]: idsToDelete,
+          },
+        },
       });
 
       const recordsKept = await DownTimeReport.count();
@@ -131,5 +176,3 @@ export class DatabaseRepository {
     }
   }
 }
-
-
