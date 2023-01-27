@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../data/data.sqlite3"
+}
+
+model Uptime {
+  id                      Int      @id @default(autoincrement())
+  createdAt               DateTime @default(now())
+  host                    String
+  healthCheckIsAlive      String
+  healthCheckResponseBody String
+  httpCheckIsAlive        String
+  httpCheckMessage        String
+  pingCheckIsAlive        String
+  pingCheckTimeMs         Int
+  sslCheckIsAlive         String
+  sslCheckDaysLeft        Int
+}
