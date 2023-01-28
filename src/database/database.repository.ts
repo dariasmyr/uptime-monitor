@@ -1,5 +1,3 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PrismaClient } from '@prisma/client';
 
 import { LoggerService } from '../logger/logger.service';
@@ -7,13 +5,13 @@ import { stringifyFormatted } from '../tools/tools';
 
 export interface SaveReportParameters {
   host: string;
-  healthCheckIsAlive: boolean;
+  healthCheckIsAlive: boolean | 'disabled';
   healthCheckBody: string;
-  httpCheckIsAlive: boolean;
+  httpCheckIsAlive: boolean | 'disabled';
   httpCheckStatusCode: number;
-  pingCheckIsAlive: boolean;
+  pingCheckIsAlive: boolean | 'disabled';
   pingCheckTimeMs: number;
-  sslCheckIsAlive: boolean;
+  sslCheckIsAlive: boolean | 'disabled';
   sslCheckDaysLeft: number;
 }
 
@@ -22,7 +20,7 @@ export class DatabaseRepository {
   prisma: PrismaClient;
 
   constructor() {
-    this.logger = new LoggerService('SslService');
+    this.logger = new LoggerService('DatabaseRepository');
     this.prisma = new PrismaClient();
   }
 
@@ -62,42 +60,29 @@ export class DatabaseRepository {
         row.id,
       );
       return true;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       this.logger.error('Error adding row: ', error.message);
       return false;
     }
   }
 
-  // eslint-disable-next-line consistent-return
-  async deleteOldRecords(countToKeep: any): Promise<number | undefined> {
-    const total = await this.prisma.uptime.count();
-    this.logger.debug('Total rows:', total);
-    if (total > countToKeep) {
-      // Find latest countToKeep rows, and delete all others rows
-      const rowsToDelete = await this.prisma.uptime.findMany({
-        orderBy: { id: 'desc' },
-        cursor: {
-          id: countToKeep,
+  async deleteOldRecords(countToKeep: number): Promise<boolean> {
+    const recordsToKeep = await this.prisma.uptime.findMany({
+      orderBy: {
+        id: 'desc',
+      },
+      take: countToKeep,
+    });
+
+    await this.prisma.uptime.deleteMany({
+      where: {
+        id: {
+          notIn: recordsToKeep.map((record) => record.id),
         },
-      });
+      },
+    });
 
-      const idsToDelete = rowsToDelete.map((row) => row.id);
-      this.logger.debug('Deleting rows with ids:', idsToDelete);
-
-      const deletedRows = await this.prisma.uptime.deleteMany({
-        where: {
-          id: {
-            in: idsToDelete,
-          },
-        },
-      });
-
-      const recordsKept = await this.prisma.uptime.count();
-      this.logger.debug('Deleted rows:', deletedRows);
-      return recordsKept;
-    } else {
-      console.log('No rows deleted');
-      return undefined;
-    }
+    return true;
   }
 }

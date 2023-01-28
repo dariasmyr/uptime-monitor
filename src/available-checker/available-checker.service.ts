@@ -1,5 +1,3 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LoggerService } from '../logger/logger.service';
 import { HealthCheckerService } from './health-checker/health-checker.service';
 import { HttpCheckerService } from './http-checker/http-checker.service';
@@ -167,6 +165,7 @@ export class AvailableCheckerService {
               : `[SSL CHECK] Result for host ${siteHost} : is dead.`,
           );
           checkResults.sslCheck = sslResponse;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           this.logger.error(
             `[SSl CHECK] Error for host ${siteHost} : ${error.code}`,

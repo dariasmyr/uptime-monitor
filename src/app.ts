@@ -20,7 +20,6 @@ async function main() {
     config.telegram.dryRun,
   );
   await telegramRepository.sendMessage('Bot started');
-
   const databaseRepository = new DatabaseRepository(config.db.filePath);
   await databaseRepository.init();
 
