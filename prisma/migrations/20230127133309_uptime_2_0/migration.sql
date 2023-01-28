@@ -17,7 +17,7 @@ CREATE TABLE "Uptime" (
     "healthCheckIsAlive" TEXT NOT NULL,
     "healthCheckResponseBody" TEXT NOT NULL,
     "httpCheckIsAlive" TEXT NOT NULL,
-    "httpCheckMessage" TEXT NOT NULL,
+    "httpCheckStatusCode" INTEGER NOT NULL,
     "pingCheckIsAlive" TEXT NOT NULL,
     "pingCheckTimeMs" INTEGER NOT NULL,
     "sslCheckIsAlive" TEXT NOT NULL,

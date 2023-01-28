@@ -17,7 +17,7 @@ model Uptime {
   healthCheckIsAlive      String
   healthCheckResponseBody String
   httpCheckIsAlive        String
-  httpCheckMessage        String
+  httpCheckStatusCode     Int
   pingCheckIsAlive        String
   pingCheckTimeMs         Int
   sslCheckIsAlive         String

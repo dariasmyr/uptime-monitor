@@ -68,17 +68,17 @@ async function main() {
         sslRemainingDays: checkResults.sslCheck.receivedData.remainingDays,
       });
 
-      await databaseRepository.saveReport(
-        site.url,
-        checkResults.healthCheck.isAlive,
-        checkResults.healthCheck.receivedData.body,
-        checkResults.httpCheck.isAlive,
-        checkResults.httpCheck.receivedData.statusCode,
-        checkResults.pingCheck.isAlive,
-        checkResults.pingCheck.receivedData.time,
-        checkResults.sslCheck.isAlive,
-        checkResults.sslCheck.receivedData.remainingDays,
-      );
+      await databaseRepository.saveReport({
+        host: site.url,
+        healthCheckIsAlive: checkResults.healthCheck.isAlive,
+        healthCheckBody: checkResults.healthCheck.receivedData.body,
+        httpCheckIsAlive: checkResults.httpCheck.isAlive,
+        httpCheckStatusCode: checkResults.httpCheck.receivedData.statusCode,
+        pingCheckIsAlive: checkResults.pingCheck.isAlive,
+        pingCheckTimeMs: checkResults.pingCheck.receivedData.time,
+        sslCheckIsAlive: checkResults.sslCheck.isAlive,
+        sslCheckDaysLeft: checkResults.sslCheck.receivedData.remainingDays,
+      });
 
       const checkResolution = await availableCheckerService.makeResolution(
         checkResults,

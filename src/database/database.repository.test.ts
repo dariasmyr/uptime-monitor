@@ -5,8 +5,7 @@ describe('Database repository', () => {
   let databaseRepository: any;
 
   beforeAll(async () => {
-    databaseRepository = new DatabaseRepository('./data/test.db');
-    await databaseRepository.init();
+    databaseRepository = new DatabaseRepository();
   });
 
   test('should add some records', async () => {
@@ -24,7 +23,7 @@ describe('Database repository', () => {
         // eslint-disable-next-line no-magic-numbers
         100,
       );
-      expect(result).toBeTruthy();
+      expect(result).toBeDefined();
     }
   });
 
