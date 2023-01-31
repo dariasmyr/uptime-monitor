@@ -20,8 +20,7 @@ async function main() {
     config.telegram.dryRun,
   );
   await telegramRepository.sendMessage('Bot started');
-  const databaseRepository = new DatabaseRepository(config.db.filePath);
-  await databaseRepository.init();
+  const databaseRepository = new DatabaseRepository();
 
   function startDeleteOldRecordsInterval() {
     setInterval(async () => {
@@ -83,10 +82,9 @@ async function main() {
         checkResults,
       );
       logger.debug('Check resolution', stringifyFormatted(checkResolution));
-
       if (!checkResolution.isAlive) {
         await telegramRepository.sendMessage(
-          `Site ${site.url} is down. ${checkResolution.message}`,
+          `Site ${site.url} is DOWN. ${checkResolution.message}`,
         );
       }
     }, site.intervalMs);
