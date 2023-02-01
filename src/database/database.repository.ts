@@ -8,7 +8,7 @@ export interface SaveReportParameters {
   healthCheckIsAlive: boolean | 'disabled';
   healthCheckBody: string;
   httpCheckIsAlive: boolean | 'disabled';
-  httpCheckStatusCode: number;
+  httpCheckStatusCode: number | null;
   pingCheckIsAlive: boolean | 'disabled';
   pingCheckTimeMs: number;
   sslCheckIsAlive: boolean | 'disabled';

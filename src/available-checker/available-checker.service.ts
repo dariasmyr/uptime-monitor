@@ -20,7 +20,7 @@ export interface ISslReceivedData {
 }
 
 export interface IHttpReceivedData {
-  statusCode: number;
+  statusCode: number | null;
 }
 
 export interface IHealthcheckReceivedData {

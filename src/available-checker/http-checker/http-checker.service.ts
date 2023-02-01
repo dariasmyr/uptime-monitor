@@ -31,13 +31,15 @@ export class HttpCheckerService {
           statusCode: httpResponse.status,
         },
       };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       logger.error(url, 'ERR', error.message);
       return {
         isAlive: false,
         type: CheckType.HTTP,
         receivedData: {
-          statusCode: error.code,
+          // eslint-disable-next-line unicorn/no-null
+          statusCode: null,
         },
       };
     } finally {

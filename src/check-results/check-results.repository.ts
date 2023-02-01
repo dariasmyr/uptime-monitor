@@ -4,7 +4,7 @@ interface checkResultsRaw {
   healthIsAlive: boolean;
   healthBody: string;
   httpIsAlive: boolean;
-  httpStatusCode: number;
+  httpStatusCode: number | null;
   pingIsAlive: boolean;
   pingTime: number;
   sslIsAlive: boolean;
@@ -12,6 +12,7 @@ interface checkResultsRaw {
 }
 
 export class CheckResultsRepository {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   CheckResults: Map<string, any>;
   constructor() {
     this.CheckResults = new Map();
@@ -40,6 +41,7 @@ export class CheckResultsRepository {
   }
 
   getResults() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const results: any = {};
     for (const [url, result] of this.CheckResults.entries()) {
       // eslint-disable-next-line security/detect-object-injection
