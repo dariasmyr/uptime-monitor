@@ -6,11 +6,13 @@ import { CheckResultsFormatterService } from '../check-results/check-results-for
 import { LoggerService } from '../logger/logger.service';
 
 export class TelegramRepository {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private checkResultsRepository: any;
   private logger: LoggerService;
   private readonly apiKey: string;
   private readonly chatId: string;
   private readonly dryRun: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private bot: any;
 
   constructor(
@@ -31,8 +33,9 @@ export class TelegramRepository {
 
     this.bot.launch();
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   processStatusCommand(telegrafContext: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const results: any = this.checkResultsRepository.getResults();
     const checkResultsFormatterService = new CheckResultsFormatterService();
     return telegrafContext.reply(
@@ -40,6 +43,7 @@ export class TelegramRepository {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async sendMessage(message: any) {
     if (this.dryRun) {
       this.logger.debug('[Telegram dry run message]', message);

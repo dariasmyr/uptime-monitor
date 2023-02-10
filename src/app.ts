@@ -1,3 +1,4 @@
+import { AlertNotifierService } from './alert-notifier/alert-notifier-service';
 import { AvailableCheckerService } from './available-checker/available-checker.service';
 import { CheckResultsRepository } from './check-results/check-results.repository';
 import { config } from './config/config';
@@ -53,6 +54,11 @@ async function main() {
       });
       logger.debug('Check results', stringifyFormatted(checkResults));
 
+      const checkResolution = await availableCheckerService.makeResolution(
+        checkResults,
+      );
+      logger.debug('Check resolution', stringifyFormatted(checkResolution));
+
       checkResultsRepository.save({
         url: site.url,
         checkMethods: site.checkMethods,
@@ -76,18 +82,25 @@ async function main() {
         pingCheckTimeMs: checkResults.pingCheck.receivedData.time,
         sslCheckIsAlive: checkResults.sslCheck.isAlive,
         sslCheckDaysLeft: checkResults.sslCheck.receivedData.remainingDays,
+        checkResolution: checkResolution.isAlive,
       });
-
-      const checkResolution = await availableCheckerService.makeResolution(
-        checkResults,
-      );
-      logger.debug('Check resolution', stringifyFormatted(checkResolution));
-      if (!checkResolution.isAlive) {
-        await telegramRepository.sendMessage(
-          `Site ${site.url} is DOWN. ${checkResolution.message}`,
-        );
-      }
     }, site.intervalMs);
+
+    const alertNotifierService = new AlertNotifierService();
+    const ALERT_INTERVAL_MS = 60_000;
+    setInterval(async () => {
+      try {
+        const alertMessage = await alertNotifierService.sendAlertMessage(
+          site.url,
+        );
+        if (alertMessage) {
+          logger.debug('Alert message', alertMessage);
+          await telegramRepository.sendMessage(alertMessage);
+        }
+      } catch (error) {
+        logger.error('Error while sending report: ', error);
+      }
+    }, ALERT_INTERVAL_MS);
   }
   logger.debug('Monitoring sites started...');
 }

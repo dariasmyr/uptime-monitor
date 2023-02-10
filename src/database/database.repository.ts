@@ -13,6 +13,7 @@ export interface SaveReportParameters {
   pingCheckTimeMs: number;
   sslCheckIsAlive: boolean | 'disabled';
   sslCheckDaysLeft: number;
+  checkResolution: boolean;
 }
 
 export class DatabaseRepository {
@@ -37,6 +38,7 @@ export class DatabaseRepository {
         pingCheckTimeMs: data.pingCheckTimeMs,
         sslCheckIsAlive: data.sslCheckIsAlive,
         sslCheckDaysLeft: data.sslCheckDaysLeft,
+        checkResolution: data.checkResolution,
       }),
     );
     try {
@@ -51,6 +53,7 @@ export class DatabaseRepository {
           pingCheckTimeMs: data.pingCheckTimeMs,
           sslCheckIsAlive: data.sslCheckIsAlive.toString(),
           sslCheckDaysLeft: data.sslCheckDaysLeft,
+          checkResolution: data.checkResolution,
         },
       });
       this.logger.debug(
@@ -84,5 +87,19 @@ export class DatabaseRepository {
     });
 
     return true;
+  }
+
+  async getCheckResolution(
+    host: string,
+  ): Promise<Promise<boolean> | undefined> {
+    const result = await this.prisma.uptime.findFirst({
+      where: {
+        host: host,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+    return result?.checkResolution;
   }
 }

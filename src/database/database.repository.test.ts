@@ -27,6 +27,7 @@ describe('Database repository', () => {
         pingCheckTimeMs: 1,
         sslCheckIsAlive: true,
         sslCheckDaysLeft: 100,
+        checkResolution: true,
       });
       expect(result).toBeTruthy();
     }
@@ -46,6 +47,7 @@ describe('Database repository', () => {
         pingCheckTimeMs: 1,
         sslCheckIsAlive: true,
         sslCheckDaysLeft: 100,
+        checkResolution: true,
       });
     }
 

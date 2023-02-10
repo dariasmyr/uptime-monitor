@@ -22,4 +22,5 @@ model Uptime {
   pingCheckTimeMs         Int
   sslCheckIsAlive         String
   sslCheckDaysLeft        Int
+  checkResolution        Boolean @default(false)
 }
