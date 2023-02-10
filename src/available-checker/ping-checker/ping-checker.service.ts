@@ -11,9 +11,13 @@ export class PingCheckerService {
 
   async ping(host: string): Promise<CheckResult<CheckType.PING>> {
     const result = await ping.promise.probe(host, {
-      timeout: 2,
+      timeout: 10, // todo move to config
       extra: ['-c', '3'],
     });
+
+    if (!result.alive) {
+      console.log('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFUCK', result);
+    }
 
     const pingResponse = {
       isAlive: result.alive,

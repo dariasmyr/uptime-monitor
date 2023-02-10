@@ -2,10 +2,12 @@ import { LoggerService } from '../logger/logger.service';
 
 export class CheckResultsFormatterService {
   private logger: LoggerService;
+
   constructor() {
     this.logger = new LoggerService('CheckResultsFormatterService');
   }
-  // eslint-disable-next-line sonarjs/cognitive-complexity,complexity
+
+  // eslint-disable-next-line sonarjs/cognitive-complexity,complexity,@typescript-eslint/no-explicit-any
   formatResults(checkResults: Map<string, any>): string {
     let formattedResults = '';
     for (const [url, result] of Object.entries(checkResults)) {
