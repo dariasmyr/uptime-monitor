@@ -100,6 +100,6 @@ export class DatabaseRepository {
         id: 'desc',
       },
     });
-    return result?.checkResolution;
+    return result ? result.checkResolution : undefined;
   }
 }

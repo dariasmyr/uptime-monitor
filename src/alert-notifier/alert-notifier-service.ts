@@ -12,7 +12,7 @@ export class AlertNotifierService {
     const databaseRepository = new DatabaseRepository();
     const checkResolution = await databaseRepository.getCheckResolution(site);
     this.logger.debug(
-      `Check resolution from database for ${site}, : ${checkResolution}`,
+      `Check resolution from database for ${site} : ${checkResolution}`,
     );
     return checkResolution === false
       ? `Site ${site} is DOWN. Please check it out!`

@@ -6,7 +6,7 @@ import { CheckResult, CheckType } from '../available-checker.service';
 export class PingCheckerService {
   private logger: LoggerService;
   constructor() {
-    this.logger = new LoggerService('PingService');
+    this.logger = new LoggerService('PingCheckerService');
   }
 
   async ping(host: string): Promise<CheckResult<CheckType.PING>> {
@@ -14,10 +14,6 @@ export class PingCheckerService {
       timeout: 10, // todo move to config
       extra: ['-c', '3'],
     });
-
-    if (!result.alive) {
-      console.log('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFUCK', result);
-    }
 
     const pingResponse = {
       isAlive: result.alive,

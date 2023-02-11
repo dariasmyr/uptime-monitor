@@ -3,12 +3,10 @@ import axios from 'axios';
 import { LoggerService } from '../../logger/logger.service';
 import { CheckResult, CheckType } from '../available-checker.service';
 
-const logger = new LoggerService('HealthCheckerService');
-
 export class HealthCheckerService {
   private logger: LoggerService;
   constructor() {
-    this.logger = new LoggerService('HttpService');
+    this.logger = new LoggerService('HealthCheckerService');
   }
 
   async healthCheck(
@@ -22,7 +20,7 @@ export class HealthCheckerService {
       const resultBody = healthResponse.data;
       const resultStatus = healthResponse.status;
       if (resultBody === responseBody && resultStatus === statusCode) {
-        logger.debug(url, 'Body', resultBody, 'Status', resultStatus);
+        this.logger.debug(url, 'Body', resultBody, 'Status', resultStatus);
         return {
           isAlive: true,
           type: CheckType.HEALTHCHECK,
@@ -31,7 +29,7 @@ export class HealthCheckerService {
           },
         };
       } else {
-        logger.error(url, 'ERR', 'No data in response body');
+        this.logger.error(url, 'ERR', 'No data in response body');
         return {
           isAlive: false,
           type: CheckType.HEALTHCHECK,
@@ -42,7 +40,7 @@ export class HealthCheckerService {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      logger.error(url, 'ERR', error.message);
+      this.logger.error(url, 'ERR', error.message);
       return {
         isAlive: false,
         type: CheckType.HEALTHCHECK,

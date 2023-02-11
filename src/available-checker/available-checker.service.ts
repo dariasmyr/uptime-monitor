@@ -249,7 +249,6 @@ export class AvailableCheckerService {
         },
       );
       checkResolution.message = `Site is alive. Checks (${checkResolution.checkMethods}) are alive.`;
-      console.log(checkResolution);
       return checkResolution;
     } else {
       checkResolution.isAlive = false;
@@ -276,7 +275,6 @@ export class AvailableCheckerService {
         },
       );
       checkResolution.message = `Site is dead. Checks (${checkResolution.checkMethods}) are dead.`;
-      console.log(checkResolution);
       return checkResolution;
     }
   }

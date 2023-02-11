@@ -7,9 +7,7 @@ import { LoggerService } from './logger/logger.service';
 import { TelegramRepository } from './telegram/telegram.repository';
 import { stringifyFormatted } from './tools/tools';
 
-const logger = new LoggerService('main', true);
-
-// logger.enabled = false;
+const logger = new LoggerService('main');
 
 async function main() {
   const checkResultsRepository = new CheckResultsRepository();
@@ -106,4 +104,4 @@ async function main() {
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
-main().catch(console.error);
+main().catch(logger.error);

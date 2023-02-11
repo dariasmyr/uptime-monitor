@@ -12,7 +12,7 @@ export class SslCheckerService {
   private logger: LoggerService;
 
   constructor() {
-    this.logger = new LoggerService('SslService');
+    this.logger = new LoggerService('SslCheckerService');
   }
 
   getCertInfo(
@@ -42,6 +42,7 @@ export class SslCheckerService {
         resolve(result);
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       socket.once('error', (error: any) => {
         reject(error);
       });
