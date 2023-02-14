@@ -11,15 +11,15 @@ interface ICheckResultsRaw {
   sslRemainingDays: number;
 }
 
+// todo: add interface and remove any
 export class CheckResultsRepository {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   checkResults: Map<string, any>;
   constructor() {
     this.checkResults = new Map();
   }
 
-  save(data: ICheckResultsRaw): void {
-    this.checkResults.set(data.url, {
+  save(data: ICheckResultsRaw): Map<string, any> {
+    return this.checkResults.set(data.url, {
       checkMethods: data.checkMethods,
       healthResults: {
         isAlive: data.healthIsAlive,

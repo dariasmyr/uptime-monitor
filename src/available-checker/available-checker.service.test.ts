@@ -13,7 +13,7 @@ describe('Available checker service', () => {
       host: 'https://www.google.com/',
       methods: ['health', 'http', 'ping', 'ssl'],
       port: 443,
-      timeout: 5000,
+      timeoutSsl: 5000,
       healthSlug: 'health',
       responseBody: 'OK',
       statusCode: 200,

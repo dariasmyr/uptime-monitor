@@ -9,9 +9,12 @@ export class PingCheckerService {
     this.logger = new LoggerService('PingCheckerService');
   }
 
-  async ping(host: string): Promise<CheckResult<CheckType.PING>> {
+  async ping(
+    host: string,
+    timeout: number,
+  ): Promise<CheckResult<CheckType.PING>> {
     const result = await ping.promise.probe(host, {
-      timeout: 10, // todo move to config
+      timeout: timeout,
       extra: ['-c', '3'],
     });
 

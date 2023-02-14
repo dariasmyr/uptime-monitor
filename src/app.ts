@@ -45,10 +45,11 @@ async function main() {
         host: site.url,
         methods: site.checkMethods,
         port: config.port,
-        timeout: config.sslTimeoutMs,
+        timeoutSsl: config.sslTimeoutMs,
         healthSlug: site.healthSlug,
         responseBody: site.responseBody,
         statusCode: site.statusCode,
+        timeoutPing: config.pingTimeout,
       });
       logger.debug('Check results', stringifyFormatted(checkResults));
 

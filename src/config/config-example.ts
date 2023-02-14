@@ -13,6 +13,7 @@ export const config = {
     oldRecordsDeleteIntervalMs: 10_000,
     port: 443,
     sslTimeoutMs: 5000,
+    pingTimeout: 10,
 
     sites: [
         {

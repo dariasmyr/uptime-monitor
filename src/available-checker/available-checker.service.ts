@@ -50,14 +50,22 @@ export class CheckResults {
   sslCheck: CheckResult<CheckType.SSL>;
 }
 
-interface CheckParameters {
+interface ICheckParameters {
   host: string;
   methods: string[];
   port: number;
-  timeout: number;
+  timeoutSsl: number;
   healthSlug: string;
   responseBody: string;
   statusCode: number;
+  timeoutPing: number;
+}
+
+interface ICheckResolution {
+  host: string;
+  checkMethods: string[];
+  isAlive: boolean;
+  message: string;
 }
 
 export class AvailableCheckerService {
@@ -76,7 +84,7 @@ export class AvailableCheckerService {
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity,complexity
-  async check(data: CheckParameters): Promise<CheckResults> {
+  async check(data: ICheckParameters): Promise<CheckResults> {
     const siteHost = new URL(data.host).host;
     const checkResults = new CheckResults();
     checkResults.host = siteHost;
@@ -132,7 +140,10 @@ export class AvailableCheckerService {
       }
 
       if (data.methods.includes('ping')) {
-        const pingResponse = await this.pingChecker.ping(siteHost);
+        const pingResponse = await this.pingChecker.ping(
+          siteHost,
+          data.timeoutPing,
+        );
         this.logger.debug(
           pingResponse.receivedData.time > 0
             ? `[PING CHECK] Result for host ${siteHost} : is alive. Time: ${pingResponse.receivedData.time} ms`
@@ -157,7 +168,7 @@ export class AvailableCheckerService {
           const sslResponse = await this.sslChecker.getRemainingDays(
             siteHost,
             data.port,
-            data.timeout,
+            data.timeoutSsl,
           );
           this.logger.debug(
             sslResponse.receivedData.remainingDays > 0
@@ -195,14 +206,16 @@ export class AvailableCheckerService {
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
-  async makeResolution(checkResult: CheckResults) {
-    const checkResolution = {
-      host: checkResult.host,
-      checkMethods: checkResult.checkMethods,
-      isAlive: false,
-      message: '',
-    };
+  async makeResolution(
+    checkResult: CheckResults,
+    checkResolution: ICheckResolution,
+  ): Promise<ICheckResolution> {
     let aliveChecks = 0;
+    checkResolution.host = checkResult.host;
+    checkResolution.checkMethods = checkResult.checkMethods;
+    checkResolution.isAlive = false;
+    checkResolution.message = '';
+
     if (checkResult.healthCheck.isAlive) {
       aliveChecks++;
     } else {

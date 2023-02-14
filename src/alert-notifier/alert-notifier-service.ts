@@ -8,7 +8,7 @@ export class AlertNotifierService {
   }
 
   // create a function that will send a message to telegram if the site is down. functiom should check if checkResolution is true or false in the database and if it is false, send a message to telegram
-  async sendAlertMessage(site: string) {
+  async sendAlertMessage(site: string): Promise<string | undefined> {
     const databaseRepository = new DatabaseRepository();
     const checkResolution = await databaseRepository.getCheckResolution(site);
     this.logger.debug(
