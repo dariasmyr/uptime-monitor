@@ -61,12 +61,12 @@ interface ICheckParameters {
   timeoutPing: number;
 }
 
-interface ICheckResolution {
+type ICheckResolution = {
   host: string;
   checkMethods: string[];
   isAlive: boolean;
   message: string;
-}
+};
 
 export class AvailableCheckerService {
   private logger: LoggerService;
@@ -206,15 +206,14 @@ export class AvailableCheckerService {
   }
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
-  async makeResolution(
-    checkResult: CheckResults,
-    checkResolution: ICheckResolution,
-  ): Promise<ICheckResolution> {
+  async makeResolution(checkResult: CheckResults): Promise<ICheckResolution> {
     let aliveChecks = 0;
-    checkResolution.host = checkResult.host;
-    checkResolution.checkMethods = checkResult.checkMethods;
-    checkResolution.isAlive = false;
-    checkResolution.message = '';
+    const checkResolution: ICheckResolution = {
+      host: checkResult.host,
+      checkMethods: checkResult.checkMethods,
+      isAlive: false,
+      message: '',
+    };
 
     if (checkResult.healthCheck.isAlive) {
       aliveChecks++;

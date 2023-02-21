@@ -17,6 +17,7 @@ describe('Available checker service', () => {
       healthSlug: 'health',
       responseBody: 'OK',
       statusCode: 200,
+      timeoutPing: 10,
     });
     console.log(result);
     expect(result).toBeDefined();

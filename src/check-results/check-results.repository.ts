@@ -1,4 +1,4 @@
-interface ICheckResultsRaw {
+export interface ICheckResultsRaw {
   url: string;
   checkMethods: string[];
   healthIsAlive: boolean;

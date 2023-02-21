@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { LoggerService } from '../logger/logger.service';
 import { stringifyFormatted } from '../tools/tools';
 
-export interface SaveReportParameters {
+export interface ISaveReportParameters {
   host: string;
   healthCheckIsAlive: boolean | 'disabled';
   healthCheckBody: string;
@@ -25,7 +25,7 @@ export class DatabaseRepository {
     this.prisma = new PrismaClient();
   }
 
-  async saveReport(data: SaveReportParameters) {
+  async saveReport(data: ISaveReportParameters) {
     this.logger.debug(
       'Saving report with params: ',
       stringifyFormatted({
