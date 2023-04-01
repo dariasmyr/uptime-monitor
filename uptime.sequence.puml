@@ -52,10 +52,13 @@ loop for each site in config file
     else Save failed
         Database --> App: Returns error message
     end
+
+    alt Check resolution is false
+    App -> Bot: Initiates message
+    Bot -> User: Sends notifying message
+    end
+
+    App --> User: Displays monitoring results
 end
 
-App -> Bot: Initiates message
-Bot -> User: Sends notifying message
-
-App --> User: Displays monitoring results
 @enduml
