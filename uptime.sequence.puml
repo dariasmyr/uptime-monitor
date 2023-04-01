@@ -4,7 +4,6 @@ actor User
 participant "Telegram Bot" as Bot
 participant "App" as App
 participant "Server" as Server
-participant "Site" as Site
 database "Database" as Database
 
 
@@ -53,6 +52,7 @@ loop for each site in config file
     else Save failed
         Database --> App: Returns error message
     end
+end
 
 App -> Bot: Initiates message
 Bot -> User: Sends notifying message
