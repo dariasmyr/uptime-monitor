@@ -192,7 +192,7 @@ dist
 .idea
 
 src/config
-!src/config/config-example.js
+!src/config/config-example.ts
 
 !data/.gitkeep
 data

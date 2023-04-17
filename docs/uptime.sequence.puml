@@ -1,0 +1,64 @@
+@startuml
+autonumber
+actor User
+participant "Telegram Bot" as Bot #LightBlue
+participant "App" as App #LightGreen
+participant "Server" as Server #Pink
+database "Database" as Database
+
+
+User -> App: Initiates monitoring process
+
+loop for each site in config file
+    App -> HTTPModule: Initiates HTTP check
+    alt HTTP check successful
+        HTTPModule -> Site: Sends HTTP request
+        Site --> HTTPModule: Returns HTTP response
+        HTTPModule --> App: Returns HTTP response
+    else HTTP check failed
+        HTTPModule --> App: Returns error message
+    end
+
+    App -> SSLModule: Initiates SSL certificate check
+    alt SSL check successful
+        SSLModule -> Site: Sends SSL check request
+        Site --> SSLModule: Returns SSL check response
+        SSLModule --> App: Returns SSL check result
+    else SSL check failed
+        SSLModule --> App: Returns error message
+    end
+
+    App -> PingModule: Initiates ping check
+    alt Ping check successful
+        PingModule -> Site: Sends ping check request
+        Site --> PingModule: Returns ping timeout response
+        PingModule --> App: Returns ping check result
+    else Ping check failed
+        PingModule --> App: Returns error message
+    end
+
+    App -> HealthCheckModule: Initiates health check
+    alt Health check successful
+        HealthCheckModule -> Site: Sends health check request
+        Site --> HealthCheckModule: Returns health check response
+        HealthCheckModule --> App: Returns health check result
+    else Health check failed
+        HealthCheckModule --> App: Returns error message
+    end
+
+    App -> Database: Saves monitoring results
+    alt Save successful
+        Database --> App: Confirms save
+    else Save failed
+        Database --> App: Returns error message
+    end
+
+    alt Check resolution is false
+    App -> Bot: Initiates message
+    Bot -> User: Sends notifying message
+    end
+
+    App --> User: Displays monitoring results
+end
+
+@enduml
