@@ -1,9 +1,9 @@
 @startuml
 autonumber
 actor User
-participant "Telegram Bot" as Bot
-participant "App" as App
-participant "Server" as Server
+participant "Telegram Bot" as Bot #LightBlue
+participant "App" as App #LightGreen
+participant "Server" as Server #Pink
 database "Database" as Database
 
 
