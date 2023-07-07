@@ -1,8 +1,8 @@
 # Uptime Monitor
 An uptime monitoring tool to check the workability of sites with error notification. The tool is written in TypeScript and uses Prisma ORM to work with the database. The tool can check the site status by HTTP, ping, SSL certificate, and health check. The tool can send notifications to Telegram chat.
 
-# Sequence Diagram
-Here is the sequence diagram showing objects lifecycle and the functions running processes:
+# How it works
+Here is the sequence diagram showing objects lifecycle and the checking workability processes:
 ![Sequence Diagram Image](docs/uptime.sequence.png)
 
 # Get started
